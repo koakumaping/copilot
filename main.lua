@@ -52,6 +52,7 @@ local number8 = lcd.loadMask('./8.png')
 local number9 = lcd.loadMask('./9.png')
 local colon = lcd.loadMask('./colon.png')
 local dot = lcd.loadMask('./dot.png')
+local minus = lcd.loadMask('./minus.png')
 local charV = lcd.loadMask('./V.png')
 local charS = lcd.loadMask('./S.png')
 
@@ -117,8 +118,11 @@ local function create()
     switchNameTable={ 'SA', 'SB', 'SC', 'SD', 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' },
     switchTwoStageNameTable={ 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' },
     lastTime=os.clock(),
-    ext='--',
-    rxBatt='--',
+    ext='--.-',
+    extMin=999,
+    extMax=0,
+    extCell='-.--',
+    rxBatt='-.--',
   }
 end
 
@@ -152,6 +156,7 @@ local function getCharMask(value)
   if value == 9 or value == '9' then return number9 end
 
   if value == '.' then return dot end
+  if value == '-' then return minus end
 
   if value == 'S' then return charS end
   if value == 'V' then return charV end
@@ -306,15 +311,20 @@ end
 local function wakeupExt(widget)
   local source = system.getSource({ name='ADC2' })
   if source == nil then
-    local ext = '--'
+    local ext = '--.-'
     if ext ~= widget.ext then
       widget.ext = ext
+      widget.extCell = '-.--'
       lcd.invalidate()
     end
   else
-    local ext = string.format('%04.1f%s', source:value(), source:stringUnit())
+    local ext = string.format('%04.1f', source:value())
     if ext ~= widget.ext then
       widget.ext = ext
+      print('ext', ext, widget.extMax, widget.extMin)
+      if ext > widget.extMax then widget.extMax = ext end
+      if ext < widget.extMin then widget.extMin = ext end
+      widget.extCell = string.format('%04.2f', source:value() / 6)
       lcd.invalidate()
     end
   end
@@ -323,7 +333,7 @@ end
 local function wakeupRxBatt(widget)
   local source = system.getSource({ name='RxBatt' })
   if source == nil then
-    local rxBatt = '--'
+    local rxBatt = '-.--V'
     if rxBatt ~= widget.rxBatt then
       widget.rxBatt = rxBatt
       lcd.invalidate()
@@ -517,6 +527,8 @@ local function wakeup(widget)
   wakeupExt(widget)
   wakeupRxBatt(widget)
   -- wakeupControlSurface(widget)
+  -- local source = system.getSource({ name='RxBatt MAX' })
+  -- print(source:name() .. " module:" .. source:module() .. " band:" .. source:band() .. " appId:" .. source:appId() .. " value:" .. source:value())
 end
 
 local function drawBox(widget, x, y, w, h, title, f)
@@ -534,6 +546,7 @@ local function drawBox(widget, x, y, w, h, title, f)
   -- title
   if title ~= '' then
     lcd.font(FONT_STD)
+    -- lcd.font(lcd.loadFont('xxxl.fnt'))
     lcd.color(textColor)
     lcd.drawText( x + 8, y + 6, title)
   end
@@ -777,11 +790,25 @@ local function paintBat(widget, x, y)
 end
 
 local function paintExt(widget, x, y)
-  drawChar(widget, x, y, widget.ext)
+  drawChar(widget, x, y, string.format('%04.1f%s', widget.ext, 'V'))
+  lcd.color(textColor)
+  lcd.font(FONT_L_BOLD)
+  if widget.extMin == '--.-' then
+    lcd.drawText(x + 38, y + 66, string.format('%s%s%s%s', widget.extMin, ' .. ' , widget.extMax, ' v'))
+  else
+    lcd.drawText(x + 38, y + 66, string.format('%04.1f%s%04.1f%s', widget.extMin, ' .. ' , widget.extMax, ' v'))
+  end
+end
+
+local function paintExtCellVoltage(widget, x, y)
+  drawChar(widget, x, y, widget.extCell)
 end
 
 local function paintRxBatt(widget, x, y)
   drawChar(widget, x, y, widget.rxBatt)
+  lcd.color(textColor)
+  lcd.font(FONT_L_BOLD)
+  lcd.drawText(x + 38, y + 66, '5.03 .. 6.07 v')
 end
 
 local function paintExtCells(widget, x, y)
@@ -807,16 +834,19 @@ local function paint(widget)
   drawBox(widget, 8, 120, left, 43, '', paintSwitchSurface)
   drawBox(widget, 8, 171, left, modelBitmapHeight + 16, '', paintModelBitmap)
 
-  drawBox(widget, left + 16, 8, half, 74, '', paintExt)
-  drawBox(widget, left + 16 + half + 8, 8, half, 74, '', paintRxBatt)
+  -- line 1
+  drawBox(widget, left + 16, 8, half, 104, '', paintExt)
+  drawBox(widget, left + 16 + half + 8, 8, half, 104, '', paintRxBatt)
 
-  drawBox(widget, left + 16, 90, forth, 76, '', paintExtCells)
-  drawBox(widget, left + 16 + forth + 8, 90, forth, 76, '')
-  drawBox(widget, left + 16 + forth * 2 + 8 * 2, 90, forth, 76, '')
-  drawBox(widget, left + 16 + forth * 3 + 8 * 3, 90, forth, 76, '')
+  -- line 2
+  drawBox(widget, left + 16, 90 + 30, half, 76, '', paintExtCellVoltage)
+  -- drawBox(widget, left + 16 + forth + 8, 90, forth, 76, '')
+  drawBox(widget, left + 16 + forth * 2 + 8 * 2, 90 + 30, forth, 76, '')
+  drawBox(widget, left + 16 + forth * 3 + 8 * 3, 90 + 30, forth, 76, '')
   -- drawBox(widget, 288 + 16, 90, 288 + 16 + third * 2 + 8, 68, 'RSSI 2.4G')
 
-  drawBox(widget, left + 16, 90 + 16 + 68, 472, 96, 'RSSI 900M')
+  -- line 3
+  -- drawBox(widget, left + 16, 90 + 16 + 68, 472, 96, 'RSSI 900M')
 end
 
 local function init()

@@ -8,11 +8,14 @@ local Thr = 2
 local Ail = 3
 local step = 8
 
+local MAX = 1024
+local MIN = MIN
+
 local fontWidth = 48
 local dotWidth = 22
 
-local modelBitmapWidth = 272
-local modelBitmapHeight = 120
+local modelBitmapWidth = 280
+local modelBitmapHeight = 134
 
 local switchSurfaceX = 100
 local switchSurfaceY = 0
@@ -85,11 +88,12 @@ local function create()
   return {
     w=784,
     h=316,
-    bgColor=lcd.RGB(0xC8, 0xDC, 0xF8),
-    mainColor=lcd.RGB(0x4C, 0x3C, 0xDE),
+    bgColor=lcd.RGB(0xD0, 0xD0, 0xD0),
+    mainColor=lcd.RGB(0x00, 0xFC, 0x80),
     bitmap=lcd.loadBitmap(model.bitmap()),
     flyTime=0,
     allTime=0,
+    flyCounts=0,
     source=nil,
     value=nil,
     alpha=2,
@@ -104,25 +108,29 @@ local function create()
     p2=0,
     p3=-30,
     p4=0,
-    SA=-1024,
-    SB=-1024,
-    SC=-1024,
-    SD=-1024,
-    SE=-1024,
-    SF=-1024,
-    SG=-1024,
-    SH=-1024,
-    SI=-1024,
-    SJ=-1024,
-    switchTable={ -1024, -1024, -1024, -1024, -1024, -1024, -1024, -1024, -1024, -1024 },
+    SA=MIN,
+    SB=MIN,
+    SC=MIN,
+    SD=MIN,
+    SE=MIN,
+    SF=MIN,
+    SG=MIN,
+    SH=MIN,
+    SI=MIN,
+    SJ=MIN,
+    switchTable={ MIN, MIN, MIN, MIN, MIN, MIN, MIN, MIN, MIN, MIN },
     switchNameTable={ 'SA', 'SB', 'SC', 'SD', 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' },
     switchTwoStageNameTable={ 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' },
     lastTime=os.clock(),
-    ext='--.-',
-    extMin=999,
+    ext=0,
+    extMin=MAX,
     extMax=0,
-    extCell='-.--',
-    rxBatt='-.--',
+    extCell=0,
+    extCellMin=MAX,
+    extCellMax=0,
+    rxBatt=0,
+    rxBattMin=MAX,
+    rxBattMax=0,
   }
 end
 
@@ -131,16 +139,20 @@ local function configure(widget)
   form.addColorField(line, nil, function() return widget.bgColor end, function(color) widget.bgColor = color end)
   line = form.addLine('MainColor')
   form.addColorField(line, nil, function() return widget.mainColor end, function(color) widget.mainColor = color end)
+  line = form.addLine('FlyCounts')
+  form.addNumberField(line, nil, 0, 9999, function() return widget.flyCounts end, function(flyCounts) widget.flyCounts = flyCounts end)
 end
 
 local function read(widget)
   widget.bgColor = storage.read('bgColor')
   widget.mainColor = storage.read('mainColor')
+  widget.flyCounts = storage.read('flyCounts')
 end
 
 local function write(widget)
   storage.write('bgColor', widget.bgColor)
   storage.write('mainColor', widget.mainColor)
+  storage.write('flyCounts', widget.flyCounts)
 end
 
 local function getCharMask(value)
@@ -311,20 +323,29 @@ end
 local function wakeupExt(widget)
   local source = system.getSource({ name='ADC2' })
   if source == nil then
-    local ext = '--.-'
+    local ext = 0
     if ext ~= widget.ext then
       widget.ext = ext
-      widget.extCell = '-.--'
+      widget.extCell = 0
       lcd.invalidate()
     end
   else
-    local ext = string.format('%04.1f', source:value())
+    local ext = source:value()
     if ext ~= widget.ext then
       widget.ext = ext
-      print('ext', ext, widget.extMax, widget.extMin)
-      if ext > widget.extMax then widget.extMax = ext end
-      if ext < widget.extMin then widget.extMin = ext end
-      widget.extCell = string.format('%04.2f', source:value() / 6)
+      if ext > widget.extMax then
+        widget.extMax = ext
+        widget.extCellMax = ext / 6
+      end
+      if widget.extMin == 0 then
+        widget.extMin = widget.extMax
+        widget.extCellMin = widget.extMax / 6
+      end
+      if ext < widget.extMin then
+        widget.extMin = ext
+        widget.extCellMin = ext / 6
+      end
+      widget.extCell = source:value() / 6
       lcd.invalidate()
     end
   end
@@ -333,15 +354,18 @@ end
 local function wakeupRxBatt(widget)
   local source = system.getSource({ name='RxBatt' })
   if source == nil then
-    local rxBatt = '-.--V'
+    local rxBatt = 0
     if rxBatt ~= widget.rxBatt then
       widget.rxBatt = rxBatt
       lcd.invalidate()
     end
   else
-    local rxBatt = string.format('%.2f%s', source:value(), source:stringUnit())
+    local rxBatt = source:value()
     if rxBatt ~= widget.rxBatt then
       widget.rxBatt = rxBatt
+      if rxBatt > widget.rxBattMax then widget.rxBattMax = rxBatt end
+      if widget.rxBattMin == 0 then widget.rxBattMin = widget.rxBattMax end
+      if rxBatt < widget.rxBattMin then widget.rxBattMin = rxBatt end
       lcd.invalidate()
     end
   end
@@ -352,42 +376,12 @@ local function wakeupTime(widget)
   local allTime = tonumber(model.getTimer(1):value())
   if flyTime ~= widget.flyTime then
     widget.flyTime = flyTime
-    print('f', flyTime)
     lcd.invalidate(flyTimeX, flyTimeY, flyTimeWidth, flyTimeHeight)
   end
 
   if allTime ~= widget.allTime then
     widget.allTime = allTime
-    lcd.invalidate(300, 0, 600, 75)
-  end
-
-  if widget.source then
-    local newValue = widget.source:value()
-    if widget.value ~= newValue then
-      widget.value = newValue
-      if newValue < 1 then
-        widget.reserve = 1
-        widget.alpha = 2
-      end
-      lcd.invalidate(300, 0, 600, 75)
-    end
-  end
-
-  local time = os.clock()
-  local delay = 0.1
-
-  if time > widget.lastTime + delay then
-      widget.lastTime = time
-      if widget.value ~= nil and widget.value > 0 then
-          if widget.reserve == 0 then
-              widget.alpha = widget.alpha + 1
-              if widget.alpha > 9 then widget.reserve = 1 end
-          else
-              widget.alpha = widget.alpha - 1
-              if widget.alpha < 2 then widget.reserve = 0 end
-          end
-          lcd.invalidate(300, 0, 600, 75)
-      end
+    lcd.invalidate()
   end
 end
 
@@ -509,19 +503,17 @@ local function wakeupSwitchSurface(widget)
 end
 
 local function wakeup(widget)
-  -- print('- ', system.getSource({category=CATEGORY_SYSTEM, member=999}):value())
+  -- print('- ', system.getSource({category=CATEGORY_SYSTEM, member=MAX}):value())
   local w, h = lcd.getWindowSize()
   if w ~= widget.w then
     widget.w = w
-    print(w)
     lcd.invalidate()
   end
   if h ~= widget.h then
     widget.h = h
-    print(h)
     lcd.invalidate()
   end
-  wakeupRssi(widget)
+  -- wakeupRssi(widget)
   wakeupTime(widget)
   wakeupSwitchSurface(widget)
   wakeupExt(widget)
@@ -582,46 +574,33 @@ local function paintModelBitmap(widget, x, y)
 end
 
 local function paintTime(widget, x, y)
-  local w, h = lcd.getWindowSize()
-  local xStart = x
+  local xStart = x + 33
   local yStart = y
 
   if flyTimeX ~= xStart then flyTimeX = xStart end
   if flyTimeY ~= yStart then flyTimeY = yStart end
 
-  local flyTimeSeconds = widget.flyTime % 60
-  local flyTimeMinutes = string.format('%d', (widget.flyTime - flyTimeSeconds) / 60)
+  local flyTimeSeconds = string.format('%02d', widget.flyTime % 60)
+  local flyTimeMinutes = string.format('%02d', (widget.flyTime - flyTimeSeconds) / 60)
 
-  local allTimeHour = math.floor(widget.allTime / 3600)
-  local allTimeMinutes = math.floor((widget.allTime - allTimeHour * 3600) / 60)
+  local allTimeHour = string.format('%02d', math.floor(widget.allTime / 3600))
+  local allTimeMinutes = string.format('%02d', math.floor((widget.allTime - allTimeHour * 3600) / 60))
 
-  if widget.SE == 1024 then
-    if flyTimeSeconds % 2 == 0 then
-      lcd.color(blackColor)
-    else
-      lcd.color(themeBgColor)
-    end
-  else
-    lcd.color(blackColor)
-  end
+  -- if widget.switchTable[5] > 0 then
+  --   if flyTimeSeconds % 2 == 0 then
+  --     lcd.color(blackColor)
+  --   else
+  --     lcd.color(themeBgColor)
+  --   end
+  -- else
+  --   lcd.color(blackColor)
+  -- end
 
   drawChar(widget, xStart, yStart, string.format('%s:%s', flyTimeMinutes, flyTimeSeconds))
-  -- lcd.drawMask(xStart + fontWidth * 2, yStart, colon)
-
-  -- lcd.color(blackColor)
-  -- lcd.drawMask(xStart , yStart, getCharMask(math.floor(flyTimeMinutes / 10)))
-  -- lcd.drawMask(xStart + fontWidth, yStart, getCharMask(flyTimeMinutes % 10))
-
-  -- lcd.color(blackColor)
-  -- lcd.drawMask(xStart + fontWidth * 2 + 22, yStart, getCharMask(math.floor(flyTimeSeconds / 10)))
-  -- lcd.drawMask(xStart + fontWidth * 3 + 22, yStart, getCharMask(flyTimeSeconds % 10))
-  -- if widget.source ~= nil then
-  --   if widget.value < 1 then
-  --     lcd.color(lcd.RGB(0,128,0))
-  --   else
-  --     lcd.color(string.format("%#x", lcd.RGB(204,0,0)) - alphaList[widget.alpha])
-  --   end
-  -- end
+  lcd.color(textColor)
+  lcd.font(FONT_L_BOLD)
+  lcd.drawText(xStart + 5, y + 66, 'Latabu')
+  lcd.drawText(x + 176, y + 66, string.format('%s:%s', allTimeHour, allTimeMinutes))
 end
 
 local function getSwitchValue(widget, name)
@@ -661,7 +640,7 @@ local function paintSwitch(widget, xStart, yStart, name, index)
 end
 
 local function paintSwitchSurface(widget, x, y)
-  local xStart = x
+  local xStart = x + 4
   local yStart = y
 
   switchSurfaceX = xStart
@@ -790,67 +769,61 @@ local function paintBat(widget, x, y)
 end
 
 local function paintExt(widget, x, y)
-  drawChar(widget, x, y, string.format('%04.1f%s', widget.ext, 'V'))
+  drawChar(widget, x + 15, y, string.format('%04.1f%s', widget.ext, 'V'))
+
   lcd.color(textColor)
   lcd.font(FONT_L_BOLD)
-  if widget.extMin == '--.-' then
-    lcd.drawText(x + 38, y + 66, string.format('%s%s%s%s', widget.extMin, ' .. ' , widget.extMax, ' v'))
-  else
-    lcd.drawText(x + 38, y + 66, string.format('%04.1f%s%04.1f%s', widget.extMin, ' .. ' , widget.extMax, ' v'))
-  end
+  lcd.drawText(x + 40 + 15, y + 66, string.format('%04.2f%s%04.2f%s', widget.extCellMin == MAX and 0 or widget.extCellMin, ' .. ' , widget.extCellMax, ' v'))
 end
 
 local function paintExtCellVoltage(widget, x, y)
-  drawChar(widget, x, y, widget.extCell)
+  drawChar(widget, x + 15, y, string.format('%04.2f%s', widget.extCell, 'V'))
+
+  -- lcd.color(textColor)
+  -- lcd.font(FONT_L_BOLD)
+  -- lcd.drawText(x + 40 + 12, y + 66, string.format('%04.2f%s%04.2f%s', widget.extCellMin == MAX and 0 or widget.extCellMin, ' .. ' , widget.extCellMax, ' v'))
 end
 
 local function paintRxBatt(widget, x, y)
-  drawChar(widget, x, y, widget.rxBatt)
+  drawChar(widget, x + 15, y, string.format('%04.2f%s', widget.rxBatt, 'V'))
+
   lcd.color(textColor)
   lcd.font(FONT_L_BOLD)
-  lcd.drawText(x + 38, y + 66, '5.03 .. 6.07 v')
+  lcd.drawText(x + 40 + 15, y + 66, string.format('%04.2f%s%04.2f%s', widget.rxBattMin == MAX and 0 or widget.rxBattMin, ' .. ' , widget.rxBattMax, ' v'))
 end
 
-local function paintExtCells(widget, x, y)
-  drawChar(widget, x, y, '6S')
+local function paintFlyCounts(widget, x, y)
+  drawChar(widget, x + 15, y, string.format('%04d', widget.flyCounts))
 end
 
 local function paint(widget)
-  print('paint')
   local w, h = lcd.getWindowSize()
   lcd.color(widget.bgColor)
   lcd.drawFilledRectangle(0, 0, widget.w, widget.h)
-  -- paintRssi(widget, 0, 0, '24G')
-  -- paintRssi(widget, 40, 0, '900m')
-  -- paintBat(widget, w - 46, 4)
-  -- paintSwitchSurface(widget, 16, 4)
-  -- paintModelBitmap(widget, w - modelBitmapWidth - 8, h - modelBitmapHeight - 8, w, h)
-  -- paintContralSurface(widget, w, h)
-  local left = 288
-  local half = 232
+
+  local left = 296
+  local half = 236
   local third = 152
   local forth = 112
-  drawBox(widget, 8, 8, left, 68, 'Time', paintTime)
-  drawBox(widget, 8, 120, left, 43, '', paintSwitchSurface)
-  drawBox(widget, 8, 171, left, modelBitmapHeight + 16, '', paintModelBitmap)
+  drawBox(widget, 0, 0, left, 70 + 36, '', paintTime)
+  drawBox(widget, 0, 114, left, 43, '', paintSwitchSurface)
+  drawBox(widget, 0, 166, left, modelBitmapHeight + 16, '', paintModelBitmap)
 
   -- line 1
-  drawBox(widget, left + 16, 8, half, 104, '', paintExt)
-  drawBox(widget, left + 16 + half + 8, 8, half, 104, '', paintRxBatt)
+  drawBox(widget, left + 8, 0, half, 106, '', paintExt)
+  drawBox(widget, left + 8 + half + 8, 0, half, 106, '', paintRxBatt)
 
   -- line 2
-  drawBox(widget, left + 16, 90 + 30, half, 76, '', paintExtCellVoltage)
-  -- drawBox(widget, left + 16 + forth + 8, 90, forth, 76, '')
-  drawBox(widget, left + 16 + forth * 2 + 8 * 2, 90 + 30, forth, 76, '')
-  drawBox(widget, left + 16 + forth * 3 + 8 * 3, 90 + 30, forth, 76, '')
-  -- drawBox(widget, 288 + 16, 90, 288 + 16 + third * 2 + 8, 68, 'RSSI 2.4G')
+  drawBox(widget, left + 8, 114, half, 78, '', paintExtCellVoltage)
+  drawBox(widget, left + 8 + half + 8, 114, half, 78, '', paintFlyCounts)
 
   -- line 3
-  -- drawBox(widget, left + 16, 90 + 16 + 68, 472, 96, 'RSSI 900M')
+  drawBox(widget, left + 8, 200, half, 116, '')
+  drawBox(widget, left + 8 + half + 8, 200, half, 116, '')
 end
 
 local function init()
-  system.registerWidget({key="home", name="LatabuHobbies", create=create, configure=configure, read=read, write=write, wakeup=wakeup, paint=paint})
+  system.registerWidget({key="copilot", name="Copilot", create=create, configure=configure, read=read, write=write, wakeup=wakeup, paint=paint})
 end
 
 return {init=init}

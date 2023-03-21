@@ -7,10 +7,10 @@ local switchSurfaceY = 0
 local switchSurfaceWidth = 280
 local switchSurfaceHeight = 40
 
-local switchBitmap = lcd.loadBitmap('./check_sw_bg.png')
-local switchUpMask = lcd.loadMask('./check_sw_up.png')
-local switchMidMask = lcd.loadMask('./check_sw_mid.png')
-local switchDownMask = lcd.loadMask('./check_sw_down.png')
+local switchBitmap = lcd.loadBitmap('./bitmaps/check_sw_bg.png')
+local switchUpMask = lcd.loadMask('./bitmaps/check_sw_up.png')
+local switchMidMask = lcd.loadMask('./bitmaps/check_sw_mid.png')
+local switchDownMask = lcd.loadMask('./bitmaps/check_sw_down.png')
 
 function indexOf(array, value)
   for i, v in ipairs(array) do

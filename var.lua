@@ -15,5 +15,6 @@ module.greenColor = lcd.RGB(110, 208, 102)
 module.greyColor = lcd.RGB(64, 64, 64)
 module.bgColor = lcd.RGB(0xC8, 0xDC, 0xF8)
 module.textColor = lcd.GREY(80)
+module.themeBgColor = lcd.themeColor(THEME_DEFAULT_BGCOLOR)
 
 return module

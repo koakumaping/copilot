@@ -41,4 +41,8 @@ function module.paint(widget, x, y)
   lcd.drawText(x + 40 + 15, y + 66, string.format('%04.2f%s%04.2f%s', widget.extCellMin == MAX and 0 or widget.extCellMin, ' .. ' , widget.extCellMax, ' v'))
 end
 
+function module.paintCell(widget, x, y)
+  util.drawChar(widget, x + 15, y, string.format('%04.2f%s', widget.extCell, 'V'))
+end
+
 return module

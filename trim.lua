@@ -41,26 +41,6 @@ function module.wakeup(widget)
     widget.trim4 = trim4
     lcd.invalidate()
   end
-
-  if p1 ~= widget.p1 then
-    widget.p1 = p1
-    lcd.invalidate()
-  end
-
-  if p2 ~= widget.p2 then
-    widget.p2 = p2
-    lcd.invalidate()
-  end
-
-  if p3 ~= widget.p3 then
-    widget.p3 = p3
-    lcd.invalidate()
-  end
-
-  if p4 ~= widget.p4 then
-    widget.p4 = p4
-    lcd.invalidate()
-  end
 end
 
 function module.paint(widget, x, y)

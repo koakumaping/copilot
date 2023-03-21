@@ -87,107 +87,20 @@ function module.drawBox(widget, x, y, w, h, title, f)
   if f then f(widget, x + 8, y + fixTitleHeight) end
 end
 
-function module.calcTrim(value)
-  local base = 30
-  local max = 1024
-  local minus = 1
-  if value < 0 then
-    minus = -1
-    value = -value
-  end
+function module.convertTrim(value)
+  local MAX = 1000
+  if value > MAX then value = MAX end
+  if value < -MAX then value = -MAX end
 
-  if value == 0 then
-    return 0
-  end
-  if value < 10 then
-    return minus * 1
-  end
-  if value < 20 then
-    return minus * 2
-  end
-  if value < 30 then
-    return minus * 3
-  end
-  if value < 50 then
-    return minus * 4
-  end
-  if value < 70 then
-    return minus * 5
-  end
-  if value < 90 then
-    return minus * 6
-  end
-  if value < 110 then
-    return minus * 7
-  end
-  if value < 130 then
-    return minus * 8
-  end
-  if value < 160 then
-    return minus * 9
-  end
-  if value < 190 then
-    return minus * 10
-  end
-  if value < 210 then
-    return minus * 11
-  end
-  if value < 250 then
-    return minus * 12
-  end
-  if value < 290 then
-    return minus * 13
-  end
-  if value < 330 then
-    return minus * 14
-  end
-  if value < 370 then
-    return minus * 15
-  end
-  if value < 420 then
-    return minus * 16
-  end
-  if value < 460 then
-    return minus * 17
-  end
-  if value < 500 then
-    return minus * 18
-  end
-  if value < 540 then
-    return minus * 19
-  end
-  if value < 600 then
-    return minus * 20
-  end
-  if value < 660 then
-    return minus * 21
-  end
-  if value < 720 then
-    return minus * 22
-  end
-  if value < 780 then
-    return minus * 23
-  end
-  if value < 840 then
-    return minus * 24
-  end
-  if value < 880 then
-    return minus * 25
-  end
-  if value < 920 then
-    return minus * 26
-  end
-  if value < 960 then
-    return minus * 27
-  end
-  if value < 1000 then
-    return minus * 28
-  end
-  if value < 1024 then
-    return minus * 29
-  end
+  local fixedValue = value + MAX
+  local step = 40
 
-  return minus * 30
+  -- fix center if trim value is very small
+
+  if value > 0 and value < step then fixedValue = MAX + step end
+  if value < 0 and value > -step then fixedValue = MAX - step end
+
+  return fixedValue // 40
 end
 
 function module.calc1024(value)

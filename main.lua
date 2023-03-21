@@ -46,7 +46,7 @@ local function create()
     extMin=var.MAX,
     extMax=0,
     extCell=0,
-    extCellMin=var.MAX,
+    extCellMin=0,
     extCellMax=0,
     rxBatt=0,
     rxBattMin=var.MAX,
@@ -130,8 +130,11 @@ local function paint(widget)
   util.drawBox(widget, left + 8 + half + 8, 114, half, 78, '', counts.paint)
 
   -- line 3
-  util.drawBox(widget, left + 8, 200, half, 116, '')
-  util.drawBox(widget, left + 8 + half + 8, 200, half, 116, '')
+  util.drawBox(widget, left + 8, 200, half, 78, '', trim.paint)
+  util.drawBox(widget, left + 8 + half + 8, 200, half, 78, '')
+
+  -- line 4
+  util.drawBox(widget, left + 8, 286, half * 2 + 8, 30, '')
 end
 
 local function init()

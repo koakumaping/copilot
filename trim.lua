@@ -2,11 +2,19 @@ local var = require('var')
 local util = require('util')
 local module = {}
 
+local trimMask = lcd.loadMask('./bitmaps/trim.png')
+local trim2Mask = lcd.loadMask('./bitmaps/trim2.png')
+local trim3Mask = lcd.loadMask('./bitmaps/trim3.png')
+
 local Rud = 0
 local Ele = 1
 local Thr = 2
 local Ail = 3
 local step = 8
+
+local function format(value)
+  return value > 0 and string.format('+%d', value) or value
+end
 
 function module.wakeup(widget)
   local trim1 = util.calcTrim(system.getSource({category=CATEGORY_TRIM, member=Ail}):value())
@@ -60,98 +68,56 @@ function module.wakeup(widget)
 end
 
 function module.paint(widget, x, y)
-  local size = 65 + 2
+  local size = 60
+  local width = 12
+  local borderWidth = 2
 
-  local xStart = x
+  local padding = var.padding
+
+  local xStart = x + 26
   local yStart = y
-
-  local borderColor = lcd.RGB(0, 0, 0, 0.4)
-  local themeColor = widget.mainColor
-  local themeBgColor = var.themeBgColor
 
   local trim1 = widget.trim1
   local trim2 = widget.trim2
   local trim3 = widget.trim3
   local trim4 = widget.trim4
 
-  -- left
-  local xLeft = xStart
-  local yLeft = yStart
-  local xLeftCenter = xLeft + (size - 2 - 1) / 2 + 1
-  local yLeftCenter = yLeft + (size - 2 - 1) / 2 + 1
-  lcd.color(borderColor)
-  lcd.drawRectangle(xLeft, yLeft, size, size)
+  lcd.font(FONT_S_BOLD)
+  -- Ail
+  local ailMaskX = xStart + size + width * 2 + padding * 3
+  local ailMaskY = yStart + size - width
+  lcd.color(var.textColor)
+  lcd.drawText(ailMaskX + size, ailMaskY - padding * 2, format(trim1), RIGHT)
+  lcd.drawMask(ailMaskX, ailMaskY, trimMask)
   lcd.color(widget.mainColor)
-  lcd.drawFilledCircle(xLeftCenter + widget.p4, yLeftCenter + widget.p3, 5)
-  -- left trim
-  -- 4
-  lcd.color(borderColor)
-  lcd.drawLine(xLeftCenter, size + 3, xLeftCenter, size + 4 + 4)
-  lcd.color(themeBgColor)
-  lcd.drawFilledRectangle(xLeftCenter - 30, size + 4, 30, 4)
-  lcd.drawFilledRectangle(xLeftCenter + 1, size + 4, 30, 4)
+  lcd.drawFilledRectangle(ailMaskX + borderWidth + util.convertTrim(trim1), ailMaskY + borderWidth, 4, 8)
 
+  -- Ele
+  local eleMaskX = xStart + size + width + padding * 2
+  local eleMaskY = yStart
+  lcd.color(var.textColor)
+  lcd.drawText(eleMaskX + width + padding, eleMaskY, format(trim2))
+  lcd.drawMask(eleMaskX, eleMaskY, trim2Mask)
   lcd.color(widget.mainColor)
-  if trim4 < 0 then
-    lcd.drawFilledRectangle(xLeftCenter + trim4, size + 4, -trim4, 4)
-  elseif trim4 > 0 then
-    lcd.drawFilledRectangle(xLeftCenter + 1, size + 4, trim4, 4)
-  end
+  lcd.drawFilledRectangle(eleMaskX + borderWidth, eleMaskY + util.convertTrim(trim2) + borderWidth, 8, 4)
 
-  -- 3
-  lcd.color(borderColor)
-  lcd.drawLine(xLeft - 4 - 4 - 1, 4 + 30, xLeft - 4, 4 + 30)
-  lcd.color(themeBgColor)
-  lcd.drawFilledRectangle(xLeft - 4 - 4, 4 + 30 + 1, 4, 30)
-  lcd.drawFilledRectangle(xLeft - 4 - 4, 4, 4, 30)
-
+  -- Thr
+  local thrMaskX = xStart + size + padding
+  local thrMaskY = yStart
+  lcd.color(var.textColor)
+  lcd.drawText(thrMaskX - padding, thrMaskY, format(trim3), RIGHT)
+  lcd.drawMask(thrMaskX, thrMaskY, trim3Mask)
   lcd.color(widget.mainColor)
-  if trim3 < 0 then
-    lcd.drawFilledRectangle(xLeft - 4 - 4, 4 + 30 + 1, 4, -trim3)
-  elseif trim3 > 0 then
-    lcd.drawFilledRectangle(xLeft - 4 - 4, 4 + 30 - trim3, 4, trim3)
-  end
+  lcd.drawFilledRectangle(thrMaskX + borderWidth, thrMaskY + util.convertTrim(trim3) + borderWidth, 8, 4)
 
-  --right
-  local xRight = xLeft + size + 16
-  local yRight = yStart
-  local xRightCenter = xRight + (size - 2 - 1) / 2 + 1
-  local yRightCenter = yRight + (size - 2 - 1) / 2 + 1
-  lcd.color(borderColor)
-  lcd.drawRectangle(xRight, yRight, size, size)
+  -- Rud
+  local rudMaskX = xStart
+  local rudMaskY = yStart + size - width
+  lcd.color(var.textColor)
+  lcd.drawText(rudMaskX, rudMaskY - padding * 2, format(trim4))
+  lcd.drawMask(rudMaskX, rudMaskY, trimMask)
   lcd.color(widget.mainColor)
-  lcd.drawFilledCircle(xRightCenter + widget.p1, yRightCenter + widget.p2, 5)
-
-  -- right trim
-  -- 2
-  lcd.color(borderColor)
-  lcd.drawLine(xRight + size + 4 - 1, 4 + 30, xRight + size + 4 - 1 + 5, 4 + 30)
-  lcd.color(themeBgColor)
-  lcd.drawFilledRectangle(xRight + size + 4, 4, 4, 30)
-  lcd.drawFilledRectangle(xRight + size + 4, 4 + 30 + 1, 4, 30)
-
-  lcd.color(widget.mainColor)
-  -- lcd.drawFilledRectangle(xRight + size + 4, 4 + 30 - 14, 4, 14)
-  -- lcd.drawFilledRectangle(xRight + size + 4, 4 + 30 + 1, 4, 10)
-  if trim2 < 0 then
-    lcd.drawFilledRectangle(xRight + size + 4, 4 + 30 + 1, 4, -trim2)
-  elseif trim2 > 0 then
-    lcd.drawFilledRectangle(xRight + size + 4, 4 + 30 - trim2, 4, trim2)
-  end
-
-  -- 1
-  lcd.color(borderColor)
-  lcd.drawLine(xRightCenter, size + 3, xRightCenter, size + 4 + 4)
-  lcd.color(themeBgColor)
-  lcd.drawFilledRectangle(xRightCenter - 30, size + 4, 30, 4)
-  lcd.drawFilledRectangle(xRightCenter + 1, size + 4, 30, 4)
-
-  lcd.color(widget.mainColor)
-  if trim1 < 0 then
-    lcd.drawFilledRectangle(xRightCenter + trim1, size + 4, -trim1, 4)
-  elseif trim1 > 0 then
-    lcd.drawFilledRectangle(xRightCenter + 1, size + 4, trim1, 4)
-  end
+  lcd.drawFilledRectangle(rudMaskX + borderWidth + util.convertTrim(trim1), rudMaskY + borderWidth, 4, 8)
 end
 
 return module

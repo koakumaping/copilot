@@ -3,6 +3,8 @@ local module = {}
 module.MAX = 1024
 module.MIN = -1024
 
+module.padding = 8
+
 module.fontWidth = 48
 module.dotWidth = 22
 

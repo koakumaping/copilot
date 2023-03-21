@@ -17,14 +17,10 @@ local function format(value)
 end
 
 function module.wakeup(widget)
-  local trim1 = util.calcTrim(system.getSource({category=CATEGORY_TRIM, member=Ail}):value())
-  local trim2 = util.calcTrim(system.getSource({category=CATEGORY_TRIM, member=Ele}):value())
-  local trim3 = util.calcTrim(system.getSource({category=CATEGORY_TRIM, member=Thr}):value())
-  local trim4 = util.calcTrim(system.getSource({category=CATEGORY_TRIM, member=Rud}):value())
-  local p1 = util.calc1024(system.getSource({category=CATEGORY_CHANNEL, member=0}):value())
-  local p2 = -util.calc1024(system.getSource({category=CATEGORY_CHANNEL, member=1}):value())
-  local p3 = -util.calc1024(system.getSource({category=CATEGORY_CHANNEL, member=2}):value())
-  local p4 = util.calc1024(system.getSource({category=CATEGORY_CHANNEL, member=3}):value())
+  local trim1 = system.getSource({category=CATEGORY_TRIM, member=Ail}):value()
+  local trim2 = system.getSource({category=CATEGORY_TRIM, member=Ele}):value()
+  local trim3 = system.getSource({category=CATEGORY_TRIM, member=Thr}):value()
+  local trim4 = system.getSource({category=CATEGORY_TRIM, member=Rud}):value()
 
   if trim1 ~= widget.trim1 then
     widget.trim1 = trim1

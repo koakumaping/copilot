@@ -2,15 +2,19 @@ local var = require('var')
 local util = require('util')
 local module = {}
 
-local switchSurfaceX = 0
-local switchSurfaceY = 0
-local switchSurfaceWidth = 280
-local switchSurfaceHeight = 40
+local moduleX = 0
+local moduleY = 0
+local moduleWidth = 280
+local moduleHeight = 40
 
 local switchBitmap = lcd.loadBitmap('./bitmaps/check_sw_bg.png')
 local switchUpMask = lcd.loadMask('./bitmaps/check_sw_up.png')
 local switchMidMask = lcd.loadMask('./bitmaps/check_sw_mid.png')
 local switchDownMask = lcd.loadMask('./bitmaps/check_sw_down.png')
+
+local switchTable = { var.MIN, var.MIN, var.MIN, var.MIN, var.MIN, var.MIN, var.MIN, var.MIN, var.MIN, var.MIN }
+local switchNameTable = { 'SA', 'SB', 'SC', 'SD', 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
+local switchTwoStageNameTable = { 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
 
 function indexOf(array, value)
   for i, v in ipairs(array) do
@@ -22,8 +26,8 @@ function indexOf(array, value)
 end
 
 function getSwitchValue(widget, name)
-  local index = indexOf(widget.switchNameTable, name)
-  return widget.switchTable[index]
+  local index = indexOf(switchNameTable, name)
+  return switchTable[index]
 end
 
 function paintSwitch(widget, xStart, yStart, name, index)
@@ -40,7 +44,7 @@ function paintSwitch(widget, xStart, yStart, name, index)
   if value < 0 then lcd.color(widget.mainColor) else lcd.color(var.greyColor) end
   lcd.drawMask(xStart + (paddingRight + width) * index + 7, yStart + 1, switchUpMask)
 
-  if indexOf(widget.switchTwoStageNameTable, name) == nil then
+  if indexOf(switchTwoStageNameTable, name) == nil then
     if value == 0 then lcd.color(widget.mainColor) else lcd.color(greyColor) end
     lcd.drawMask(xStart + (paddingRight + width) * index + 10, yStart + 10, switchMidMask)
   end
@@ -61,54 +65,54 @@ function module.wakeup(widget)
   local SI = system.getSource('SI'):value()
   local SJ = system.getSource('SJ'):value()
 
-  if SA ~= widget.switchTable[1] then
-    widget.switchTable[1] = SA
-    lcd.invalidate(switchSurfaceX, switchSurfaceY, switchSurfaceWidth, switchSurfaceHeight)
+  if SA ~= switchTable[1] then
+    switchTable[1] = SA
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
-  if SB ~= widget.switchTable[2] then
-    widget.switchTable[2] = SB
-    lcd.invalidate(switchSurfaceX, switchSurfaceY, switchSurfaceWidth, switchSurfaceHeight)
+  if SB ~= switchTable[2] then
+    switchTable[2] = SB
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
-  if SC ~= widget.switchTable[3] then
-    widget.switchTable[3] = SC
-    lcd.invalidate(switchSurfaceX, switchSurfaceY, switchSurfaceWidth, switchSurfaceHeight)
+  if SC ~= switchTable[3] then
+    switchTable[3] = SC
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
-  if SD ~= widget.switchTable[4] then
-    widget.switchTable[4] = SD
-    lcd.invalidate(switchSurfaceX, switchSurfaceY, switchSurfaceWidth, switchSurfaceHeight)
+  if SD ~= switchTable[4] then
+    switchTable[4] = SD
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
-  if SE ~= widget.switchTable[5] then
-    widget.switchTable[5] = SE
-    lcd.invalidate(switchSurfaceX, switchSurfaceY, switchSurfaceWidth, switchSurfaceHeight)
+  if SE ~= switchTable[5] then
+    switchTable[5] = SE
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
-  if SF ~= widget.switchTable[6] then
-    widget.switchTable[6] = SF
-    lcd.invalidate(switchSurfaceX, switchSurfaceY, switchSurfaceWidth, switchSurfaceHeight)
+  if SF ~= switchTable[6] then
+    switchTable[6] = SF
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
-  if SG ~= widget.switchTable[7] then
-    widget.switchTable[7] = SG
-    lcd.invalidate(switchSurfaceX, switchSurfaceY, switchSurfaceWidth, switchSurfaceHeight)
+  if SG ~= switchTable[7] then
+    switchTable[7] = SG
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
-  if SH ~= widget.switchTable[8] then
-    widget.switchTable[8] = SH
-    lcd.invalidate(switchSurfaceX, switchSurfaceY, switchSurfaceWidth, switchSurfaceHeight)
+  if SH ~= switchTable[8] then
+    switchTable[8] = SH
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
-  if SI ~= widget.switchTable[9] then
-    widget.switchTable[9] = SI
-    lcd.invalidate(switchSurfaceX, switchSurfaceY, switchSurfaceWidth, switchSurfaceHeight)
+  if SI ~= switchTable[9] then
+    switchTable[9] = SI
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
-  if SJ ~= widget.switchTable[10] then
-    widget.switchTable[10] = SJ
-    lcd.invalidate(switchSurfaceX, switchSurfaceY, switchSurfaceWidth, switchSurfaceHeight)
+  if SJ ~= switchTable[10] then
+    switchTable[10] = SJ
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 end
 
@@ -116,8 +120,8 @@ function module.paint(widget, x, y)
   local xStart = x + 4
   local yStart = y
 
-  switchSurfaceX = xStart
-  switchSurfaceY = yStart
+  moduleX = xStart
+  moduleY = yStart
 
   paintSwitch(widget, xStart, yStart, 'SE', 0)
   paintSwitch(widget, xStart, yStart, 'SF', 1)

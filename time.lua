@@ -7,16 +7,19 @@ local flyTimeY = 0
 local flyTimeWidth = 48 *4 + 22
 local flyTimeHeight = 60
 
+local flyTime = 0
+local allTime = 0
+
 function module.wakeup(widget)
-  local flyTime = tonumber(model.getTimer(0):value())
+  local _flyTime = tonumber(model.getTimer(0):value())
   local allTime = tonumber(model.getTimer(1):value())
-  if flyTime ~= widget.flyTime then
-    widget.flyTime = flyTime
+  if _flyTime ~= flyTime then
+    flyTime = _flyTime
     lcd.invalidate(flyTimeX, flyTimeY, flyTimeWidth, flyTimeHeight)
   end
 
-  if allTime ~= widget.allTime then
-    widget.allTime = allTime
+  if _allTime ~= allTime then
+    allTime = _allTime
     lcd.invalidate(flyTimeX, flyTimeY, flyTimeWidth, flyTimeHeight)
   end
 end
@@ -28,13 +31,13 @@ function module.paint(widget, x, y)
   if flyTimeX ~= xStart then flyTimeX = xStart end
   if flyTimeY ~= yStart then flyTimeY = yStart end
 
-  local flyTimeSeconds = string.format('%02d', widget.flyTime % 60)
-  local flyTimeMinutes = string.format('%02d', (widget.flyTime - flyTimeSeconds) / 60)
+  local flyTimeSeconds = string.format('%02d', flyTime % 60)
+  local flyTimeMinutes = string.format('%02d', (flyTime - flyTimeSeconds) / 60)
 
-  local allTimeHour = string.format('%02d', math.floor(widget.allTime / 3600))
-  local allTimeMinutes = string.format('%02d', math.floor((widget.allTime - allTimeHour * 3600) / 60))
+  local allTimeHour = string.format('%02d', math.floor(allTime / 3600))
+  local allTimeMinutes = string.format('%02d', math.floor((allTime - allTimeHour * 3600) / 60))
 
-  -- if widget.switchTable[5] > 0 then
+  -- if switchTable[5] > 0 then
   --   if flyTimeSeconds % 2 == 0 then
   --     lcd.color(blackColor)
   --   else

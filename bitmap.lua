@@ -3,6 +3,7 @@ local util = require('util')
 local module = {}
 
 local modelMask = lcd.loadMask('./bitmaps/model-mask.png')
+-- local bitmap = lcd.loadBitmap(model.bitmap())
 
 function module.paint(widget, x, y)
   lcd.drawBitmap(x, y, widget.bitmap, var.modelBitmapWidth, var.modelBitmapHeight)

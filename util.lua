@@ -1,4 +1,4 @@
-local var = require('var')
+local var = dofile('/scripts/copilot/var.lua')
 
 local module = {}
 
@@ -101,6 +101,22 @@ function module.convertTrim(value)
   if value < 0 and value > -step then fixedValue = MAX - step end
 
   return fixedValue // 40
+end
+
+function module.convertReverseTrim(value)
+  local MAX = 1000
+  if value > MAX then value = MAX end
+  if value < -MAX then value = -MAX end
+
+  local fixedValue = value + MAX
+  local step = 40
+
+  -- fix center if trim value is very small
+
+  if value > 0 and value < step then fixedValue = MAX + step end
+  if value < 0 and value > -step then fixedValue = MAX - step end
+
+  return 2000 / step - fixedValue // 40
 end
 
 function module.calc1024(value)

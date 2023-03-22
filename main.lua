@@ -1,15 +1,25 @@
-local var = require('var')
-local util = require('util')
+local function loadLib(name)
+  return dofile('/scripts/copilot/'..name..'.lua')
+end
 
-local time = require('time')
-local switch = require('switch')
-local bitmap = require('bitmap')
-local ext = require('ext')
-local rx = require('rx')
-local counts = require('counts')
-local trim = require('trim')
+local var = loadLib('var')
+local util = loadLib('util')
+
+local time = loadLib('time')
+local switch = loadLib('switch')
+local bitmap = loadLib('bitmap')
+local ext = loadLib('ext')
+local rx = loadLib('rx')
+local counts = loadLib('counts')
+local trim = loadLib('trim')
+
+local initPending = false
 
 local function create()
+  if not initPending then
+    initPending = true
+  end
+
   return {
     w = 784,
     h = 316,

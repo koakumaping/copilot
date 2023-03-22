@@ -1,5 +1,5 @@
-local var = require('var')
-local util = require('util')
+local var = dofile('/scripts/copilot/var.lua')
+local util = dofile('/scripts/copilot/util.lua')
 local module = {}
 
 local trimMask = lcd.loadMask('./bitmaps/trim.png')
@@ -75,7 +75,7 @@ function module.paint(widget, x, y)
   lcd.drawText(eleMaskX + width + padding, eleMaskY, format(trim2))
   lcd.drawMask(eleMaskX, eleMaskY, trim2Mask)
   lcd.color(widget.mainColor)
-  lcd.drawFilledRectangle(eleMaskX + borderWidth, eleMaskY + util.convertTrim(trim2) + borderWidth, 8, 4)
+  lcd.drawFilledRectangle(eleMaskX + borderWidth, eleMaskY + util.convertReverseTrim(trim2) + borderWidth, 8, 4)
 
   -- Thr
   local thrMaskX = xStart + size + padding
@@ -84,7 +84,7 @@ function module.paint(widget, x, y)
   lcd.drawText(thrMaskX - padding, thrMaskY, format(trim3), RIGHT)
   lcd.drawMask(thrMaskX, thrMaskY, trim3Mask)
   lcd.color(widget.mainColor)
-  lcd.drawFilledRectangle(thrMaskX + borderWidth, thrMaskY + util.convertTrim(trim3) + borderWidth, 8, 4)
+  lcd.drawFilledRectangle(thrMaskX + borderWidth, thrMaskY + util.convertReverseTrim(trim3) + borderWidth, 8, 4)
 
   -- Rud
   local rudMaskX = xStart
@@ -93,7 +93,7 @@ function module.paint(widget, x, y)
   lcd.drawText(rudMaskX, rudMaskY - padding * 2, format(trim4))
   lcd.drawMask(rudMaskX, rudMaskY, trimMask)
   lcd.color(widget.mainColor)
-  lcd.drawFilledRectangle(rudMaskX + borderWidth + util.convertTrim(trim1), rudMaskY + borderWidth, 4, 8)
+  lcd.drawFilledRectangle(rudMaskX + borderWidth + util.convertTrim(trim4), rudMaskY + borderWidth, 4, 8)
 end
 
 return module

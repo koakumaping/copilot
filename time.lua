@@ -4,15 +4,15 @@ local module = {}
 
 local moduleX = 0
 local moduleY = 0
-local moduleWidth = 48 *4 + 22
-local moduleHeight = 60
+local moduleWidth = 48 * 4 + 22
+local moduleHeight = 90
 
 local flyTime = 0
 local allTime = 0
 
 function module.wakeup(widget)
   local _flyTime = tonumber(model.getTimer(0):value())
-  local allTime = tonumber(model.getTimer(1):value())
+  local _allTime = tonumber(model.getTimer(1):value())
   if _flyTime ~= flyTime then
     flyTime = _flyTime
     lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)

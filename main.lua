@@ -124,7 +124,7 @@ local function init()
     wakeup=wakeup,
     paint=paint,
     menu=menu,
-    persistent=true,
+    persistent=false,
     title=false,
   })
 end

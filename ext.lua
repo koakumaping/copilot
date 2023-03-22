@@ -4,7 +4,7 @@ local module = {}
 
 local moduleX = 0
 local moduleY = 0
-local moduleWidth = 280
+local moduleWidth = 180
 local moduleHeight = 180
 
 local ext = 0

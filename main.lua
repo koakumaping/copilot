@@ -83,6 +83,7 @@ local function wakeup(widget)
   switch.wakeup(widget)
   rx.wakeup(widget)
   trim.wakeup(widget)
+  counts.wakeup(widget)
 end
 
 local function paint(widget)

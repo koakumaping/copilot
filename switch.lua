@@ -16,6 +16,19 @@ local switchTable = { var.MIN, var.MIN, var.MIN, var.MIN, var.MIN, var.MIN, var.
 local switchNameTable = { 'SA', 'SB', 'SC', 'SD', 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
 local switchTwoStageNameTable = { 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
 
+local function staticTime()
+  return -1
+end
+
+local function rangeSeconds()
+  return 90
+end
+
+local countStartTime = staticTime()
+local countStartTimeRecording = false
+local countEndTime = staticTime()
+local countEndTimeRecording = false
+
 function indexOf(array, value)
   for i, v in ipairs(array) do
     if v == value then
@@ -87,6 +100,26 @@ function module.wakeup(widget)
 
   if SE ~= switchTable[5] then
     switchTable[5] = SE
+    -- start
+    if SE > 0 and not countStartTimeRecording then
+      local timerStart = model.getTimer(0):start()
+      local timerValue = model.getTimer(0):value()
+      -- local timerActiveConditionValue = model.getTimer(0):activeCondition():value()
+      -- print(timerStart, timerValue, timerActiveConditionValue, countEndTimeRecording)
+
+      countEndTimeRecording = false
+      if timerStart == timerValue then
+        countStartTime = os.clock()
+        countStartTimeRecording = true
+        countEndTime = staticTime()
+      end
+    end
+    -- end
+    if SE < 0 and not countEndTimeRecording then
+      countEndTime = os.clock()
+      countStartTimeRecording = false
+      countEndTimeRecording = true
+    end
     lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
@@ -107,6 +140,14 @@ function module.wakeup(widget)
 
   if SI ~= switchTable[9] then
     switchTable[9] = SI
+    -- record
+    if SI > 0 and countEndTimeRecording and countEndTime ~= staticTime() then
+      if countEndTime - countStartTime > rangeSeconds() then
+        -- countStartTime = staticTime()
+        countEndTime = staticTime()
+        widget.flyCounts = widget.flyCounts + 1
+      end
+    end
     lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
@@ -117,6 +158,7 @@ function module.wakeup(widget)
 end
 
 function module.paint(widget, x, y)
+  print(countStartTime, countEndTime)
   local xStart = x + 4
   local yStart = y
 

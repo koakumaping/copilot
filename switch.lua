@@ -120,8 +120,8 @@ function module.paint(widget, x, y)
   local xStart = x + 4
   local yStart = y
 
-  moduleX = xStart
-  moduleY = yStart
+  if moduleX ~= xStart then moduleX = xStart end
+  if moduleY ~= yStart then moduleY = yStart end
 
   paintSwitch(widget, xStart, yStart, 'SE', 0)
   paintSwitch(widget, xStart, yStart, 'SF', 1)

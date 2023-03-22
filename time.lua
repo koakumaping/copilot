@@ -2,10 +2,10 @@ local var = dofile('/scripts/copilot/var.lua')
 local util = dofile('/scripts/copilot/util.lua')
 local module = {}
 
-local flyTimeX = 0
-local flyTimeY = 0
-local flyTimeWidth = 48 *4 + 22
-local flyTimeHeight = 60
+local moduleX = 0
+local moduleY = 0
+local moduleWidth = 48 *4 + 22
+local moduleHeight = 60
 
 local flyTime = 0
 local allTime = 0
@@ -15,12 +15,12 @@ function module.wakeup(widget)
   local allTime = tonumber(model.getTimer(1):value())
   if _flyTime ~= flyTime then
     flyTime = _flyTime
-    lcd.invalidate(flyTimeX, flyTimeY, flyTimeWidth, flyTimeHeight)
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
   if _allTime ~= allTime then
     allTime = _allTime
-    lcd.invalidate(flyTimeX, flyTimeY, flyTimeWidth, flyTimeHeight)
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 end
 
@@ -28,8 +28,8 @@ function module.paint(widget, x, y)
   local xStart = x + 33
   local yStart = y
 
-  if flyTimeX ~= xStart then flyTimeX = xStart end
-  if flyTimeY ~= yStart then flyTimeY = yStart end
+  if moduleX ~= xStart then moduleX = xStart end
+  if moduleY ~= yStart then moduleY = yStart end
 
   local flyTimeSeconds = string.format('%02d', flyTime % 60)
   local flyTimeMinutes = string.format('%02d', (flyTime - flyTimeSeconds) / 60)

@@ -2,6 +2,11 @@ local var = dofile('/scripts/copilot/var.lua')
 local util = dofile('/scripts/copilot/util.lua')
 local module = {}
 
+local moduleX = 0
+local moduleY = 0
+local moduleWidth = 280
+local moduleHeight = 180
+
 local ext = 0
 local extMin = var.MAX
 local extMax = 0
@@ -16,7 +21,7 @@ function module.wakeup(widget)
     if _ext ~= ext then
       ext = _ext
       extCell = 0
-      lcd.invalidate()
+      lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
     end
   else
     local _ext = source:value()
@@ -35,21 +40,26 @@ function module.wakeup(widget)
         extCellMin = _ext / 6
       end
       extCell = source:value() / 6
-      lcd.invalidate()
+      lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
     end
   end
 end
 
 function module.paint(widget, x, y)
-  util.drawChar(widget, x + 15, y, string.format('%04.1f%s', ext, 'V'))
+  local xStart = x
+  local yStart = y
+  if moduleX ~= xStart then moduleX = xStart end
+  if moduleY ~= yStart then moduleY = yStart end
+
+  util.drawChar(widget, xStart + 15, yStart, string.format('%04.1f%s', ext, 'V'))
 
   lcd.color(var.textColor)
   lcd.font(FONT_L_BOLD)
-  lcd.drawText(x + 40 + 15, y + 66, string.format('%04.2f%s%04.2f%s', extCellMin == MAX and 0 or extCellMin, ' .. ' , extCellMax, ' v'))
+  lcd.drawText(xStart + 40 + 15, yStart + 66, string.format('%04.2f%s%04.2f%s', extCellMin == MAX and 0 or extCellMin, ' .. ' , extCellMax, ' v'))
 end
 
-function module.paintCell(widget, x, y)
-  util.drawChar(widget, x + 15, y, string.format('%04.2f%s', extCell, 'V'))
+function module.paintCell(widget, xStart, yStart)
+  util.drawChar(widget, xStart + 15, yStart, string.format('%04.2f%s', extCell, 'V'))
 end
 
 return module

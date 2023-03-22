@@ -5,7 +5,7 @@ local module = {}
 local moduleX = 0
 local moduleY = 0
 local moduleWidth = 180
-local moduleHeight = 50
+local moduleHeight = 88
 
 local rxBatt = 0
 local rxBattMin = var.MAX

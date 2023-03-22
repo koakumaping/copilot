@@ -9,7 +9,7 @@ local trim3Mask = lcd.loadMask('./bitmaps/trim3.png')
 local moduleX = 0
 local moduleY = 0
 local moduleWidth = 280
-local moduleHeight = 50
+local moduleHeight = 70
 
 local Rud = 0
 local Ele = 1

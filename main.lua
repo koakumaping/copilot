@@ -12,6 +12,7 @@ local ext = loadLib('ext')
 local rx = loadLib('rx')
 local counts = loadLib('counts')
 local trim = loadLib('trim')
+local copyright = loadLib('copyright')
 
 local initPending = false
 
@@ -69,6 +70,7 @@ local function menu(widget)
 end
 
 local function wakeup(widget)
+  print(system.getMemoryUsage().mainStackAvailable)
   local w, h = lcd.getWindowSize()
   if w ~= widget.w then
     widget.w = w
@@ -84,6 +86,7 @@ local function wakeup(widget)
   rx.wakeup(widget)
   trim.wakeup(widget)
   counts.wakeup(widget)
+  copyright.wakeup(widget)
 end
 
 local function paint(widget)
@@ -111,7 +114,7 @@ local function paint(widget)
   util.drawBox(widget, left + 8 + half + 8, 200, half, 78, '')
 
   -- line 4
-  util.drawBox(widget, left + 8, 286, half * 2 + 8, 30, '')
+  util.drawBox(widget, left + 8, 286, half * 2 + 8, 30, '', copyright.paint)
 end
 
 local function init()

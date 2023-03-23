@@ -70,7 +70,7 @@ local function menu(widget)
 end
 
 local function wakeup(widget)
-  print(system.getMemoryUsage().mainStackAvailable)
+  -- print(system.getMemoryUsage().mainStackAvailable)
   local w, h = lcd.getWindowSize()
   if w ~= widget.w then
     widget.w = w

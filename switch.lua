@@ -158,7 +158,7 @@ function module.wakeup(widget)
 end
 
 function module.paint(widget, x, y)
-  print(countStartTime, countEndTime)
+  -- print(countStartTime, countEndTime)
   local xStart = x + 4
   local yStart = y
 

@@ -23,7 +23,7 @@ local trim3 = 0
 local trim4 = 0
 
 local function format(value)
-  return value > 0 and string.format('+%d', value) or value
+  return value > 0 and string.format('+%d', value) or string.format('%d', value)
 end
 
 function module.wakeup(widget)

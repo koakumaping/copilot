@@ -14,6 +14,7 @@ local counts = loadLib('counts')
 local trim = loadLib('trim')
 local copyright = loadLib('copyright')
 local channel = loadLib('channel')
+local message = loadLib('message')
 
 local initPending = false
 
@@ -27,6 +28,9 @@ local function create()
     h = 316,
     bitmap = lcd.loadBitmap(model.bitmap()),
     flyCounts = 0,
+    message = '',
+    messageStartTime = 0,
+    messageEndTime = 0,
   }
 end
 
@@ -79,6 +83,7 @@ local function wakeup(widget)
   counts.wakeup(widget)
   copyright.wakeup(widget)
   channel.wakeup(widget)
+  message.wakeup(widget)
 end
 
 local function paint(widget)
@@ -107,6 +112,8 @@ local function paint(widget)
 
   -- line 4
   util.drawBox(widget, left + 8, 286, half * 2 + 8, 30, copyright.paint)
+  message.paint(widget, 400, 200)
+  lcd.setClipping(400, 200, 120, 20)
 end
 
 local function init()

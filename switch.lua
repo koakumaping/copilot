@@ -1,5 +1,6 @@
 local var = dofile('/scripts/copilot/var.lua')
 local util = dofile('/scripts/copilot/util.lua')
+local message = dofile('/scripts/copilot/message.lua')
 local module = {}
 
 local moduleX = 0
@@ -112,6 +113,7 @@ function module.wakeup(widget)
         countStartTime = os.clock()
         countStartTimeRecording = true
         countEndTime = staticTime()
+        message.push(widget, 'jj')
       end
     end
     -- end

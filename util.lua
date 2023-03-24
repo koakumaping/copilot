@@ -59,32 +59,17 @@ function module.drawChar(widget, x, y, value)
   end
 end
 
-function module.drawBox(widget, x, y, w, h, title, f)
-  local titleHeight = 36
-  local fixTitleHeight = 8
-
-  -- title
-  if title ~= '' then
-    fixTitleHeight = titleHeight
-    h = h + titleHeight
-  end
-
+function module.drawBox(widget, x, y, w, h, f)
   lcd.color(lcd.RGB(225, 225, 225))
   lcd.drawFilledRectangle(x, y, w, h)
-  -- title
-  if title ~= '' then
-    lcd.font(FONT_STD)
-    -- lcd.font(lcd.loadFont('xxxl.fnt'))
-    lcd.color(textColor)
-    lcd.drawText( x + 8, y + 6, title)
-  end
+
   lcd.color(var.bgColor)
   lcd.drawMask(x, y, topLeftMask)
   lcd.drawMask(x + w - 6, y, topRightMask)
   lcd.drawMask(x, y + h - 6, bottomLeftMask)
   lcd.drawMask(x + w - 6, y + h - 6, bottomRightMask)
 
-  if f then f(widget, x + 8, y + fixTitleHeight) end
+  if f then f(widget, x + 8, y + 8) end
 end
 
 function module.convertTrim(value)

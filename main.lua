@@ -89,24 +89,24 @@ local function paint(widget)
   local half = 236
   local third = 152
   local forth = 112
-  util.drawBox(widget, 0, 0, left, 70 + 36, '', time.paint)
-  util.drawBox(widget, 0, 114, left, 43, '', switch.paint)
-  util.drawBox(widget, 0, 166, left, var.modelBitmapHeight + 16, '', bitmap.paint)
+  util.drawBox(widget, 0, 0, left, 70 + 36, time.paint)
+  util.drawBox(widget, 0, 114, left, 43, switch.paint)
+  util.drawBox(widget, 0, 166, left, var.modelBitmapHeight + 16, bitmap.paint)
 
   -- line 1
-  util.drawBox(widget, left + 8, 0, half, 106, '', ext.paint)
-  util.drawBox(widget, left + 8 + half + 8, 0, half, 106, '', rx.paint)
+  util.drawBox(widget, left + 8, 0, half, 106, ext.paint)
+  util.drawBox(widget, left + 8 + half + 8, 0, half, 106, rx.paint)
 
   -- line 2
-  util.drawBox(widget, left + 8, 114, half, 78, '', ext.paintCell)
-  util.drawBox(widget, left + 8 + half + 8, 114, half, 78, '', counts.paint)
+  util.drawBox(widget, left + 8, 114, half, 78, ext.paintCell)
+  util.drawBox(widget, left + 8 + half + 8, 114, half, 78, counts.paint)
 
   -- line 3
-  util.drawBox(widget, left + 8, 200, half, 78, '', trim.paint)
-  util.drawBox(widget, left + 8 + half + 8, 200, half, 78, '', channel.paint)
+  util.drawBox(widget, left + 8, 200, half, 78, trim.paint)
+  util.drawBox(widget, left + 8 + half + 8, 200, half, 78, channel.paint)
 
   -- line 4
-  util.drawBox(widget, left + 8, 286, half * 2 + 8, 30, '', copyright.paint)
+  util.drawBox(widget, left + 8, 286, half * 2 + 8, 30, copyright.paint)
 end
 
 local function init()

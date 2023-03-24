@@ -109,20 +109,25 @@ function module.convertReverseTrim(value)
   if value < -MAX then value = -MAX end
 
   local fixedValue = value + MAX
-  local step = 40
+  local step = 36
 
   -- fix center if trim value is very small
 
   if value > 0 and value < step then fixedValue = MAX + step end
   if value < 0 and value > -step then fixedValue = MAX - step end
 
-  return 2000 / step - fixedValue // 40
+  return 2000 / step - fixedValue // step
 end
 
-function module.calc1024(value)
-  local base = 30
-  local max = 1024
-  return math.floor(value * base / max)
+function module.convertChannel(value)
+  local MAX = 1000
+  if value > MAX then value = MAX end
+  if value < -MAX then value = -MAX end
+
+  local fixedValue = -value
+  local step = 36
+
+  return fixedValue // step
 end
 
 return module

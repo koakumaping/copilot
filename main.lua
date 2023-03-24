@@ -13,6 +13,7 @@ local rx = loadLib('rx')
 local counts = loadLib('counts')
 local trim = loadLib('trim')
 local copyright = loadLib('copyright')
+local channel = loadLib('channel')
 
 local initPending = false
 
@@ -25,8 +26,6 @@ local function create()
     w = 784,
     h = 316,
     bitmap = lcd.loadBitmap(model.bitmap()),
-    bgColor = lcd.RGB(0xD0, 0xD0, 0xD0),
-    mainColor = lcd.RGB(0x00, 0xFC, 0x80),
     flyCounts = 0,
   }
 end
@@ -79,10 +78,11 @@ local function wakeup(widget)
   trim.wakeup(widget)
   counts.wakeup(widget)
   copyright.wakeup(widget)
+  channel.wakeup(widget)
 end
 
 local function paint(widget)
-  lcd.color(widget.bgColor)
+  lcd.color(var.bgColor)
   lcd.drawFilledRectangle(0, 0, widget.w, widget.h)
 
   local left = 296
@@ -103,7 +103,7 @@ local function paint(widget)
 
   -- line 3
   util.drawBox(widget, left + 8, 200, half, 78, '', trim.paint)
-  util.drawBox(widget, left + 8 + half + 8, 200, half, 78, '')
+  util.drawBox(widget, left + 8 + half + 8, 200, half, 78, '', channel.paint)
 
   -- line 4
   util.drawBox(widget, left + 8, 286, half * 2 + 8, 30, '', copyright.paint)

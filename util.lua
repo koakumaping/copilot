@@ -78,7 +78,7 @@ function module.drawBox(widget, x, y, w, h, title, f)
     lcd.color(textColor)
     lcd.drawText( x + 8, y + 6, title)
   end
-  lcd.color(widget.bgColor)
+  lcd.color(var.bgColor)
   lcd.drawMask(x, y, topLeftMask)
   lcd.drawMask(x + w - 6, y, topRightMask)
   lcd.drawMask(x, y + h - 6, bottomLeftMask)

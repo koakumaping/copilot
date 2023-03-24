@@ -8,13 +8,13 @@ local moduleWidth = 480
 local moduleHeight = 30
 
 local mask = lcd.loadMask('./bitmaps/copyright.png')
-local mainStackAvailable = 0
+local name = 'X20S'
 local version = '0.0.0'
 
 function module.wakeup(widget)
-  local _mainStackAvailable = system.getMemoryUsage().mainStackAvailable / 1000
-  if _mainStackAvailable ~= mainStackAvailable then
-    mainStackAvailable = _mainStackAvailable
+  local _name = system.getVersion().board
+  if _name ~= name then
+    name = _name
     lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 
@@ -34,7 +34,7 @@ function module.paint(widget, x, y)
 
   lcd.color(var.textColor)
   lcd.drawMask(xStart, yStart, mask, 480, 30)
-  lcd.drawText(xStart + 8, yStart + 8, string.format('%s(%dKB)', version, mainStackAvailable))
+  lcd.drawText(xStart + 8, yStart + 8, string.format('%s %s', name, version ))
 end
 
 return module

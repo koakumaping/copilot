@@ -32,31 +32,23 @@ local function create()
 end
 
 local function configure(widget)
-  line = form.addLine('BackgroundColor')
-  form.addColorField(line, nil, function() return widget.bgColor end, function(color) widget.bgColor = color end)
-  line = form.addLine('MainColor')
-  form.addColorField(line, nil, function() return widget.mainColor end, function(color) widget.mainColor = color end)
   line = form.addLine('FlyCounts')
   form.addNumberField(line, nil, 0, 9999, function() return widget.flyCounts end, function(flyCounts) widget.flyCounts = flyCounts end)
 end
 
 local function read(widget)
-  widget.bgColor = storage.read('bgColor')
-  widget.mainColor = storage.read('mainColor')
   widget.flyCounts = storage.read('flyCounts')
 end
 
 local function write(widget)
-  storage.write('bgColor', widget.bgColor)
-  storage.write('mainColor', widget.mainColor)
   storage.write('flyCounts', widget.flyCounts)
 end
 
 local function menu(widget)
   return {
-    {'Lua... playNumber(RSSI)',
+    {'Lua Menu Test',
       function()
-        local sensor = system.getSource('RSSI')
+        local sensor = system.getSource({ name='RxBatt' })
         system.playNumber(sensor:value(), sensor:unit(), sensor:decimals())
         local buttons = {
           {label="OK", action=function() return true end},

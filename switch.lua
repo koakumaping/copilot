@@ -54,15 +54,15 @@ function paintSwitch(widget, xStart, yStart, name, index)
 
   lcd.drawBitmap(xStart + (paddingRight + width) * index, yStart, switchBitmap)
 
-  if value < 0 then lcd.color(widget.mainColor) else lcd.color(var.greyColor) end
+  if value < 0 then lcd.color(var.themeColor) else lcd.color(var.greyColor) end
   lcd.drawMask(xStart + (paddingRight + width) * index + 7, yStart + 1, switchUpMask)
 
   if indexOf(switchTwoStageNameTable, name) == nil then
-    if value == 0 then lcd.color(widget.mainColor) else lcd.color(var.greyColor) end
+    if value == 0 then lcd.color(var.themeColor) else lcd.color(var.greyColor) end
     lcd.drawMask(xStart + (paddingRight + width) * index + 10, yStart + 10, switchMidMask)
   end
 
-  if value > 0 then lcd.color(widget.mainColor) else lcd.color(var.greyColor) end
+  if value > 0 then lcd.color(var.themeColor) else lcd.color(var.greyColor) end
   lcd.drawMask(xStart + (paddingRight + width) * index + 7, yStart + 18, switchDownMask)
 end
 

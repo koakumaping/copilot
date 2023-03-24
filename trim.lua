@@ -74,7 +74,7 @@ function module.paint(widget, x, y)
   lcd.color(var.textColor)
   lcd.drawText(ailMaskX + size, ailMaskY - padding * 2, format(trim1), RIGHT)
   lcd.drawMask(ailMaskX, ailMaskY, trimMask)
-  lcd.color(widget.mainColor)
+  lcd.color(var.themeColor)
   lcd.drawFilledRectangle(ailMaskX + borderWidth + util.convertTrim(trim1) + 1, ailMaskY + borderWidth + fix, 5, 8)
 
   -- Ele
@@ -83,7 +83,7 @@ function module.paint(widget, x, y)
   lcd.color(var.textColor)
   lcd.drawText(eleMaskX + width + padding, eleMaskY, format(trim2))
   lcd.drawMask(eleMaskX, eleMaskY, trim2Mask)
-  lcd.color(widget.mainColor)
+  lcd.color(var.themeColor)
   lcd.drawFilledRectangle(eleMaskX + borderWidth + fix, eleMaskY + util.convertReverseTrim(trim2) + borderWidth + 1, 8, 5)
 
   -- Thr
@@ -92,7 +92,7 @@ function module.paint(widget, x, y)
   lcd.color(var.textColor)
   lcd.drawText(thrMaskX - padding, thrMaskY, format(trim3), RIGHT)
   lcd.drawMask(thrMaskX, thrMaskY, trim3Mask)
-  lcd.color(widget.mainColor)
+  lcd.color(var.themeColor)
   lcd.drawFilledRectangle(thrMaskX + borderWidth, thrMaskY + util.convertReverseTrim(trim3) + borderWidth + 1, 8, 5)
 
   -- Rud
@@ -101,7 +101,7 @@ function module.paint(widget, x, y)
   lcd.color(var.textColor)
   lcd.drawText(rudMaskX, rudMaskY - padding * 2, format(trim4))
   lcd.drawMask(rudMaskX, rudMaskY, trimMask)
-  lcd.color(widget.mainColor)
+  lcd.color(var.themeColor)
   lcd.drawFilledRectangle(rudMaskX + borderWidth + util.convertTrim(trim4) + 1, rudMaskY + borderWidth + fix, 5, 8)
 end
 

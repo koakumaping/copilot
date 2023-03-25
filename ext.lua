@@ -1,5 +1,3 @@
-local var = dofile('/scripts/copilot/var.lua')
-local util = dofile('/scripts/copilot/util.lua')
 local module = {}
 
 local moduleX = 0
@@ -8,7 +6,7 @@ local moduleWidth = 180
 local moduleHeight = 180
 
 local ext = 0
-local extMin = var.MAX
+local extMin = 1024
 local extMax = 0
 local extCell = 0
 local extCellMin = 0
@@ -51,15 +49,15 @@ function module.paint(widget, x, y)
   if moduleX ~= xStart then moduleX = xStart end
   if moduleY ~= yStart then moduleY = yStart end
 
-  util.drawChar(widget, xStart + 15, yStart, string.format('%04.1f%s', ext, 'V'))
+  widget.libs.util.drawChar(widget, xStart + 15, yStart, string.format('%04.1f%s', ext, 'V'))
 
-  lcd.color(var.textColor)
+  lcd.color(widget.libs.var.textColor)
   lcd.font(FONT_L_BOLD)
   lcd.drawText(xStart + 40 + 15, yStart + 66, string.format('%04.2f%s%04.2f%s', extCellMin == MAX and 0 or extCellMin, ' .. ' , extCellMax, ' v'))
 end
 
 function module.paintCell(widget, xStart, yStart)
-  util.drawChar(widget, xStart + 15, yStart, string.format('%04.2f%s', extCell, 'V'))
+  widget.libs.util.drawChar(widget, xStart + 15, yStart, string.format('%04.2f%s', extCell, 'V'))
 end
 
 return module

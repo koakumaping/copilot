@@ -43,14 +43,14 @@ end
 
 function module.wakeup(widget)
   local chTable = {
-    util.convertChannel(system.getSource({category=CATEGORY_CHANNEL, member=0}):value()),
-    util.convertChannel(system.getSource({category=CATEGORY_CHANNEL, member=1}):value()),
-    util.convertChannel(system.getSource({category=CATEGORY_CHANNEL, member=2}):value()),
-    util.convertChannel(system.getSource({category=CATEGORY_CHANNEL, member=3}):value()),
-    util.convertChannel(system.getSource({category=CATEGORY_CHANNEL, member=4}):value()),
-    util.convertChannel(system.getSource({category=CATEGORY_CHANNEL, member=5}):value()),
-    util.convertChannel(system.getSource({category=CATEGORY_CHANNEL, member=6}):value()),
-    util.convertChannel(system.getSource({category=CATEGORY_CHANNEL, member=7}):value()),
+    system.getSource({category=CATEGORY_CHANNEL, member=0}):value(),
+    system.getSource({category=CATEGORY_CHANNEL, member=1}):value(),
+    system.getSource({category=CATEGORY_CHANNEL, member=2}):value(),
+    system.getSource({category=CATEGORY_CHANNEL, member=3}):value(),
+    system.getSource({category=CATEGORY_CHANNEL, member=4}):value(),
+    system.getSource({category=CATEGORY_CHANNEL, member=5}):value(),
+    system.getSource({category=CATEGORY_CHANNEL, member=6}):value(),
+    system.getSource({category=CATEGORY_CHANNEL, member=7}):value(),
   }
   -- print(chTable)
 

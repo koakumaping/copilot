@@ -1,5 +1,3 @@
-local var = dofile('/scripts/copilot/var.lua')
-local util = dofile('/scripts/copilot/util.lua')
 local module = {}
 
 local trimMask = lcd.loadMask('./bitmaps/trim.png')
@@ -58,7 +56,7 @@ function module.paint(widget, x, y)
   local width = 16
   local borderWidth = 2
 
-  local padding = var.padding
+  local padding = widget.libs.var.padding
   local fix = 6
 
   local xStart = x + 23
@@ -71,38 +69,38 @@ function module.paint(widget, x, y)
   -- Ail
   local ailMaskX = xStart + size + width * 2 + padding * 3
   local ailMaskY = yStart + size - width - borderWidth
-  lcd.color(var.textColor)
+  lcd.color(widget.libs.var.textColor)
   lcd.drawText(ailMaskX + size, ailMaskY - padding * 2, format(trim1), RIGHT)
   lcd.drawMask(ailMaskX, ailMaskY, trimMask)
-  lcd.color(var.themeColor)
-  lcd.drawFilledRectangle(ailMaskX + borderWidth + util.convertTrim(trim1) + 1, ailMaskY + borderWidth + fix, 5, 8)
+  lcd.color(widget.libs.var.themeColor)
+  lcd.drawFilledRectangle(ailMaskX + borderWidth + widget.libs.util.convertTrim(trim1) + 1, ailMaskY + borderWidth + fix, 5, 8)
 
   -- Ele
   local eleMaskX = xStart + size + width + padding * 2
   local eleMaskY = yStart
-  lcd.color(var.textColor)
+  lcd.color(widget.libs.var.textColor)
   lcd.drawText(eleMaskX + width + padding, eleMaskY, format(trim2))
   lcd.drawMask(eleMaskX, eleMaskY, trim2Mask)
-  lcd.color(var.themeColor)
-  lcd.drawFilledRectangle(eleMaskX + borderWidth + fix, eleMaskY + util.convertReverseTrim(trim2) + borderWidth + 1, 8, 5)
+  lcd.color(widget.libs.var.themeColor)
+  lcd.drawFilledRectangle(eleMaskX + borderWidth + fix, eleMaskY + widget.libs.util.convertReverseTrim(trim2) + borderWidth + 1, 8, 5)
 
   -- Thr
   local thrMaskX = xStart + size + padding
   local thrMaskY = yStart
-  lcd.color(var.textColor)
+  lcd.color(widget.libs.var.textColor)
   lcd.drawText(thrMaskX - padding, thrMaskY, format(trim3), RIGHT)
   lcd.drawMask(thrMaskX, thrMaskY, trim3Mask)
-  lcd.color(var.themeColor)
-  lcd.drawFilledRectangle(thrMaskX + borderWidth, thrMaskY + util.convertReverseTrim(trim3) + borderWidth + 1, 8, 5)
+  lcd.color(widget.libs.var.themeColor)
+  lcd.drawFilledRectangle(thrMaskX + borderWidth, thrMaskY + widget.libs.util.convertReverseTrim(trim3) + borderWidth + 1, 8, 5)
 
   -- Rud
   local rudMaskX = xStart
   local rudMaskY = yStart + size - width - borderWidth
-  lcd.color(var.textColor)
+  lcd.color(widget.libs.var.textColor)
   lcd.drawText(rudMaskX, rudMaskY - padding * 2, format(trim4))
   lcd.drawMask(rudMaskX, rudMaskY, trimMask)
-  lcd.color(var.themeColor)
-  lcd.drawFilledRectangle(rudMaskX + borderWidth + util.convertTrim(trim4) + 1, rudMaskY + borderWidth + fix, 5, 8)
+  lcd.color(widget.libs.var.themeColor)
+  lcd.drawFilledRectangle(rudMaskX + borderWidth + widget.libs.util.convertTrim(trim4) + 1, rudMaskY + borderWidth + fix, 5, 8)
 end
 
 return module

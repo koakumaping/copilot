@@ -1,5 +1,3 @@
-local var = dofile('/scripts/copilot/var.lua')
-local util = dofile('/scripts/copilot/util.lua')
 local module = {}
 
 local moduleX = 332
@@ -28,7 +26,7 @@ function module.paint(widget, x, y)
       lcd.setClipping(moduleX, moduleY, moduleWidth, moduleHeight)
       print('message unpainted', os.clock())
     end
-    lcd.color(var.textColor)
+    lcd.color(widget.libs.var.textColor)
     lcd.drawMask(moduleX, moduleY, messageMask)
     print('message painted', os.clock())
   end

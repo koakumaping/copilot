@@ -1,5 +1,3 @@
-local var = dofile('/scripts/copilot/var.lua')
-local util = dofile('/scripts/copilot/util.lua')
 local module = {}
 
 local mask = lcd.loadMask('./bitmaps/time.png')
@@ -59,14 +57,14 @@ function module.paint(widget, x, y)
   --   lcd.color(blackColor)
   -- end
 
-  util.drawChar(widget, xStart, yStart, string.format('%s:%s', flyTimeMinutes, flyTimeSeconds))
-  lcd.color(var.textColor)
+  widget.libs.util.drawChar(widget, xStart, yStart, string.format('%s:%s', flyTimeMinutes, flyTimeSeconds))
+  lcd.color(widget.libs.var.textColor)
   lcd.font(FONT_L_BOLD)
   lcd.drawText(x + 86, yStart + 65, string.format('%s:%s .. %s:%s', lastFlyTimeMinutes, lastFlyTimeSeconds, allTimeHour, allTimeMinutes))
 
-  -- lcd.color(var.themeColor)
+  -- lcd.color(widget.libs.var.themeColor)
   -- lcd.drawFilledRectangle(xStart + 2 + 4, yStart + 69 + 2, 200, 16)
-  -- lcd.color(var.textColor)
+  -- lcd.color(widget.libs.var.textColor)
   -- lcd.drawMask(xStart + 4, yStart + 69, mask)
 end
 

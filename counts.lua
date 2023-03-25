@@ -1,5 +1,3 @@
-local var = dofile('/scripts/copilot/var.lua')
-local util = dofile('/scripts/copilot/util.lua')
 local module = {}
 
 local moduleX = 0
@@ -22,8 +20,8 @@ function module.paint(widget, x, y)
   if moduleX ~= xStart then moduleX = xStart end
   if moduleY ~= yStart then moduleY = yStart end
 
-  lcd.color(var.textColor)
-  util.drawChar(widget, xStart, yStart, string.format('%04d', current))
+  lcd.color(widget.libs.var.textColor)
+  widget.libs.util.drawChar(widget, xStart, yStart, string.format('%04d', current))
 end
 
 return module

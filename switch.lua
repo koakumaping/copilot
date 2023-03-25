@@ -1,5 +1,3 @@
-local var = dofile('/scripts/copilot/var.lua')
-local util = dofile('/scripts/copilot/util.lua')
 local message = dofile('/scripts/copilot/message.lua')
 local module = {}
 
@@ -13,7 +11,9 @@ local switchUpMask = lcd.loadMask('./bitmaps/check_sw_up.png')
 local switchMidMask = lcd.loadMask('./bitmaps/check_sw_mid.png')
 local switchDownMask = lcd.loadMask('./bitmaps/check_sw_down.png')
 
-local switchTable = { var.MIN, var.MIN, var.MIN, var.MIN, var.MIN, var.MIN, var.MIN, var.MIN, var.MIN, var.MIN }
+local MIN = -1024
+
+local switchTable = { MIN, MIN, MIN, MIN, MIN, MIN, MIN, MIN, MIN, MIN }
 local switchNameTable = { 'SA', 'SB', 'SC', 'SD', 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
 local switchTwoStageNameTable = { 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
 
@@ -55,15 +55,15 @@ function paintSwitch(widget, xStart, yStart, name, index)
 
   lcd.drawBitmap(xStart + (paddingRight + width) * index, yStart, switchBitmap)
 
-  if value < 0 then lcd.color(var.themeColor) else lcd.color(var.greyColor) end
+  if value < 0 then lcd.color(widget.libs.var.themeColor) else lcd.color(widget.libs.var.greyColor) end
   lcd.drawMask(xStart + (paddingRight + width) * index + 7, yStart + 1, switchUpMask)
 
   if indexOf(switchTwoStageNameTable, name) == nil then
-    if value == 0 then lcd.color(var.themeColor) else lcd.color(var.greyColor) end
+    if value == 0 then lcd.color(widget.libs.var.themeColor) else lcd.color(widget.libs.var.greyColor) end
     lcd.drawMask(xStart + (paddingRight + width) * index + 10, yStart + 10, switchMidMask)
   end
 
-  if value > 0 then lcd.color(var.themeColor) else lcd.color(var.greyColor) end
+  if value > 0 then lcd.color(widget.libs.var.themeColor) else lcd.color(widget.libs.var.greyColor) end
   lcd.drawMask(xStart + (paddingRight + width) * index + 7, yStart + 18, switchDownMask)
 end
 
@@ -113,7 +113,7 @@ function module.wakeup(widget)
         countStartTime = os.clock()
         countStartTimeRecording = true
         countEndTime = staticTime()
-        message.push(widget, 'jj')
+        widget.libs.message.push(widget, 'jj')
       end
     end
     -- end

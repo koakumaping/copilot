@@ -28,6 +28,11 @@ local function create()
     h = 316,
     bitmap = lcd.loadBitmap(model.bitmap()),
     flyCounts = 0,
+    libs = {
+      var = var,
+      util = util,
+      message = message,
+    },
     message = '',
     messageStartTime = 0,
     messageEndTime = 0,
@@ -66,6 +71,7 @@ end
 
 local function wakeup(widget)
   -- print(system.getMemoryUsage().mainStackAvailable)
+  print(widget.libs.var.MAX)
   local w, h = lcd.getWindowSize()
   if w ~= widget.w then
     widget.w = w

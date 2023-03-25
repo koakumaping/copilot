@@ -71,7 +71,6 @@ end
 
 local function wakeup(widget)
   -- print(system.getMemoryUsage().mainStackAvailable)
-  print(widget.libs.var.MAX)
   local w, h = lcd.getWindowSize()
   if w ~= widget.w then
     widget.w = w

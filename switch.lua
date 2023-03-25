@@ -113,7 +113,7 @@ function module.wakeup(widget)
         countStartTime = os.clock()
         countStartTimeRecording = true
         countEndTime = staticTime()
-        widget.libs.message.push(widget, 'jj')
+        widget.libs.message.push('START')
       end
     end
     -- end
@@ -121,6 +121,7 @@ function module.wakeup(widget)
       countEndTime = os.clock()
       countStartTimeRecording = false
       countEndTimeRecording = true
+      widget.libs.message.push('STOP')
     end
     lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end

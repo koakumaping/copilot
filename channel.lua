@@ -1,5 +1,3 @@
-local var = dofile('/scripts/copilot/var.lua')
-local util = dofile('/scripts/copilot/util.lua')
 local module = {}
 
 local moduleX = 0
@@ -14,8 +12,10 @@ local width = 18
 local borderWidth = 2
 local fix = 6
 
+local MIN = -1024
+
 local p1 = 0
-local p2 = var.MIN
+local p2 = MIN
 local p3 = 0
 local p4 = 0
 local p5 = 0
@@ -23,22 +23,34 @@ local p6 = 0
 local p7 = 0
 local p8 = 0
 
-local channelTable = { 0, 0, var.MIN, 0, 0, 0, 0, 0 }
+local channelTable = { 0, 0, MIN, 0, 0, 0, 0, 0 }
 local channelNameTable = { 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8' }
 
-padding = 18 + var.padding
+padding = 18 + 8
 
-function drawChannel(index, value)
-  index = index - 1
-  lcd.color(var.themeColor)
-  lcd.drawFilledRectangle(
-    moduleX + padding * index + borderWidth,
-    moduleY + borderWidth + 28,
-    width - borderWidth * 2,
-    util.convertChannel(value)
-  )
-  lcd.color(var.textColor)
-  lcd.drawMask(moduleX + padding * index, moduleY, channelMask)
+function drawChannel(widget, index, value)
+  local _index = index - 1
+  local innerHeight = size - borderWidth * 2
+  local halfInnerHeight = innerHeight / 2
+  lcd.color(widget.libs.var.themeColor)
+  if index ~= 3 then
+    lcd.drawFilledRectangle(
+      moduleX + padding * _index + borderWidth,
+      moduleY + borderWidth + halfInnerHeight,
+      width - borderWidth * 2,
+      widget.libs.util.convertChannel(value)
+    )
+  else
+    lcd.drawFilledRectangle(
+      moduleX + padding * _index + borderWidth,
+      moduleY + borderWidth + innerHeight - widget.libs.util.convertThrChannel(value),
+      width - borderWidth * 2,
+      widget.libs.util.convertThrChannel(value)
+    )
+  end
+
+  lcd.color(widget.libs.var.textColor)
+  lcd.drawMask(moduleX + padding * _index, moduleY, channelMask)
 end
 
 function module.wakeup(widget)
@@ -91,7 +103,7 @@ function module.paint(widget, x, y)
   if moduleY ~= yStart then moduleY = yStart end
 
   for i, v in ipairs(channelTable) do
-    drawChannel(i, v)
+    drawChannel(widget, i, v)
   end
 
   -- lcd.color(var.themeColor)

@@ -2,6 +2,8 @@ local var = dofile('/scripts/copilot/var.lua')
 
 local module = {}
 
+local MAX = 1024
+
 local number0 = lcd.loadMask('./bitmaps/0.png')
 local number1 = lcd.loadMask('./bitmaps/1.png')
 local number2 = lcd.loadMask('./bitmaps/2.png')
@@ -73,26 +75,18 @@ function module.drawBox(widget, x, y, w, h, f)
 end
 
 function module.convertTrim(value)
-  local MAX = 1000
-  if value > MAX then value = MAX end
-  if value < -MAX then value = -MAX end
-
   local fixedValue = value + MAX
-  local step = 40
+  local step = 36
 
   -- fix center if trim value is very small
 
   if value > 0 and value < step then fixedValue = MAX + step end
   if value < 0 and value > -step then fixedValue = MAX - step end
 
-  return fixedValue // 40
+  return fixedValue // 36
 end
 
 function module.convertReverseTrim(value)
-  local MAX = 1000
-  if value > MAX then value = MAX end
-  if value < -MAX then value = -MAX end
-
   local fixedValue = value + MAX
   local step = 36
 
@@ -105,11 +99,14 @@ function module.convertReverseTrim(value)
 end
 
 function module.convertChannel(value)
-  local MAX = 1000
-  if value > MAX then value = MAX end
-  if value < -MAX then value = -MAX end
-
   local fixedValue = -value
+  local step = 36
+
+  return fixedValue // step
+end
+
+function module.convertThrChannel(value)
+  local fixedValue = value + MAX
   local step = 36
 
   return fixedValue // step

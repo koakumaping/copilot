@@ -54,14 +54,14 @@ function module.paint(widget, x, y)
     if messageEndTime <= os.clock() then
       message = ''
       lcd.setClipping(moduleX, moduleY, moduleWidth, moduleHeight)
-      print('message unpainted', os.clock())
+      -- print('message unpainted', os.clock())
     end
     -- lcd.color(widget.libs.var.textColor)
     -- lcd.drawMask(moduleX, moduleY, messageMask)
     -- lcd.color(widget.libs.var.whiteColor)
     -- lcd.drawText(moduleX + 16, moduleY + 16, message)
     draw(widget)
-    print('message painted', os.clock())
+    -- print('message painted', os.clock())
   end
 end
 

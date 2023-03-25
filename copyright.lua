@@ -6,16 +6,9 @@ local moduleWidth = 480
 local moduleHeight = 30
 
 local mask = lcd.loadMask('./bitmaps/copyright.png')
-local name = 'X20S'
 local version = '0.0.0'
 
 function module.wakeup(widget)
-  local _name = system.getVersion().board
-  if _name ~= name then
-    name = _name
-    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
-  end
-
   local _version = system.getVersion().version
   if _version ~= version then
     version = _version
@@ -32,7 +25,7 @@ function module.paint(widget, x, y)
 
   lcd.color(widget.libs.var.textColor)
   lcd.drawMask(xStart, yStart, mask, 480, 30)
-  lcd.drawText(xStart + 8, yStart + 8, string.format('%s %s', name, version ))
+  lcd.drawText(xStart + 58, yStart + 8, version)
 end
 
 return module

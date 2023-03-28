@@ -69,7 +69,13 @@ function module.wakeup(widget)
   for i, v in ipairs(chTable) do
     if channelTable[i] ~= v then
       channelTable[i] = v
-      lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
+      -- lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
+      lcd.invalidate(
+        moduleX + padding * i + borderWidth,
+        moduleY + borderWidth,
+        width - borderWidth * 2,
+        size
+      )
       -- print(i, v, chTable[i])
     end
   end

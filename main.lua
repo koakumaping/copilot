@@ -1,5 +1,9 @@
 local function loadLib(name)
-  return dofile('/scripts/copilot/'..name..'.lua')
+  local lib = dofile('/scripts/copilot/'..name..'.lua')
+  if lib.init ~= nil then
+    lib.init()
+  end
+  return lib
 end
 
 local var = loadLib('var')
@@ -32,6 +36,7 @@ local function create()
       var = var,
       util = util,
       message = message,
+      counts = counts,
     },
     message = '',
     messageStartTime = 0,
@@ -119,24 +124,6 @@ local function paint(widget)
   util.drawBox(widget, left + 8, 286, half * 2 + 8, 30, copyright.paint)
   message.paint(widget, 400, 200)
   lcd.setClipping(400, 200, 120, 20)
-  local f = io.open('data/model.csv')
-  -- print(f:read('*line'))
-  -- print(f:read('*line'))
-  local count = 1
-  while f do
-    local line = f:read('*line')
-    if line == nil then break end
-    -- io.write(string.format("%6d  ", count), line, "\n")
-    local name, flyTimes = line:match("([^,]+),([^,]+)")
-    print(string.format("%6d  ", count), name, tonumber(flyTimes))
-    count = count + 1
-  end
-
-  -- tempfile = io.tempfile
-  -- filewrite = io.open("tempfile.txt", "w")
-  -- filewrite:write(model.name())
-  -- filewrite:close()
-  -- print(model:id())
 end
 
 local function init()

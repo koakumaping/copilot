@@ -6,10 +6,71 @@ local moduleWidth = 200
 local moduleHeight = 60
 
 local current = 0
+local _current = 0
+
+local modelName = model.name()
+local fileName = 'data/fly.csv'
+
+function getTime()
+  return os.date("%Y-%m-%d %H:%M:%S", os.time())
+end
+
+function module.save()
+  local data = 'Name,FlyTimes,LastFlyTime\n'
+  local csv = io.open(fileName, 'r')
+
+  local count = 1
+  local saved = 0
+  while csv do
+    local line = csv:read('*line')
+    if line == nil then break end
+    if count ~= 1 then
+      local name, flyTimes, lastFlyTime = line:match('([^,]+),([^,]+)')
+      if name == modelName then
+        flyTimes = _current
+        lastFlyTime = getTime()
+        saved = 1
+      end
+      data = string.format('%s%s,%d,%s\n', data, name, flyTimes, lastFlyTime)
+    end
+    count = count + 1
+  end
+  if csv then csv:close() end
+  -- if no data in csv
+  if saved == 0 then
+    data = string.format('%s%s,%d,%s\n', data, modelName, _current, getTime())
+  end
+
+  -- save to file
+  local filewrite = io.open(fileName, 'w')
+  filewrite:write(data)
+  filewrite:close()
+end
+
+function module.init()
+  local csv = io.open(fileName, 'r')
+  while csv do
+    local line = csv:read('*line')
+    if line == nil then break end
+    local name, flyTimes = line:match("([^,]+),([^,]+)")
+    print(line)
+    if name == modelName then
+      _current = flyTimes
+      break
+    end
+  end
+
+  if csv then csv:close() end
+end
+
+function module.add()
+  _current = _current + 1
+  module:save()
+end
 
 function module.wakeup(widget)
-  if current ~= widget.flyCounts then
-    current = widget.flyCounts
+  if current ~= _current then
+    current = _current
     lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
 end

@@ -112,4 +112,8 @@ function module.convertThrChannel(value)
   return fixedValue // step
 end
 
+function module.getTime()
+  return os.date("%Y-%m-%d %H:%M:%S", os.time())
+end
+
 return module

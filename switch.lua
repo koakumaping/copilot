@@ -17,17 +17,12 @@ local switchTable = { MIN, MIN, MIN, MIN, MIN, MIN, MIN, MIN, MIN, MIN }
 local switchNameTable = { 'SA', 'SB', 'SC', 'SD', 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
 local switchTwoStageNameTable = { 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
 
-local function staticTime()
-  return -1
-end
+local staticTime <const> = -1
+local rangeSeconds <const> = 3
 
-local function rangeSeconds()
-  return 90
-end
-
-local countStartTime = staticTime()
+local countStartTime = staticTime
 local countStartTimeRecording = false
-local countEndTime = staticTime()
+local countEndTime = staticTime
 local countEndTimeRecording = false
 
 function indexOf(array, value)
@@ -112,7 +107,7 @@ function module.wakeup(widget)
       if timerStart == timerValue then
         countStartTime = os.clock()
         countStartTimeRecording = true
-        countEndTime = staticTime()
+        countEndTime = staticTime
         widget.libs.message.push('START')
       end
     end
@@ -144,11 +139,11 @@ function module.wakeup(widget)
   if SI ~= switchTable[9] then
     switchTable[9] = SI
     -- record
-    if SI > 0 and countEndTimeRecording and countEndTime ~= staticTime() then
-      if countEndTime - countStartTime > rangeSeconds() then
-        -- countStartTime = staticTime()
-        countEndTime = staticTime()
-        widget.flyCounts = widget.flyCounts + 1
+    if SI > 0 and countEndTimeRecording and countEndTime ~= staticTime then
+      if countEndTime - countStartTime > rangeSeconds then
+        -- countStartTime = staticTime
+        countEndTime = staticTime
+        widget.libs.counts.add()
       end
     end
     lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)

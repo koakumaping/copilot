@@ -51,7 +51,16 @@ function module.save()
 end
 
 function module.init()
+  print('init', model.name(), modelName)
   local csv = io.open(fileName, 'r')
+  -- creat if not exist
+  if csv == nil then
+    filewrite = io.open(fileName, 'w')
+    filewrite:write('Name,FlyTimes,LastFlyTime\n')
+    filewrite:close()
+    csv = io.open(fileName, 'r')
+  end
+
   while csv do
     local line = csv:read('*line')
     if line == nil then

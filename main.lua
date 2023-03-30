@@ -6,15 +6,11 @@ local function loadLib(name)
   return lib
 end
 
-local var = loadLib('var')
-local util = loadLib('util')
-
 local time = loadLib('time')
 local switch = loadLib('switch')
 local bitmap = loadLib('bitmap')
 local ext = loadLib('ext')
 local rx = loadLib('rx')
-local counts = loadLib('counts')
 local trim = loadLib('trim')
 local copyright = loadLib('copyright')
 local channel = loadLib('channel')
@@ -33,10 +29,10 @@ local function create()
     bitmap = lcd.loadBitmap(model.bitmap()),
     flyCounts = 0,
     libs = {
-      var = var,
-      util = util,
+      var = loadLib('var'),
+      util = loadLib('util'),
       message = message,
-      counts = counts,
+      counts = loadLib('counts'),
     },
     message = '',
     messageStartTime = 0,
@@ -90,38 +86,38 @@ local function wakeup(widget)
   switch.wakeup(widget)
   rx.wakeup(widget)
   trim.wakeup(widget)
-  counts.wakeup(widget)
+  widget.libs.counts.wakeup(widget)
   copyright.wakeup(widget)
   channel.wakeup(widget)
   message.wakeup(widget)
 end
 
 local function paint(widget)
-  lcd.color(var.bgColor)
+  lcd.color(widget.libs.var.bgColor)
   lcd.drawFilledRectangle(0, 0, widget.w, widget.h)
 
   local left = 296
   local half = 236
   local third = 152
   local forth = 112
-  util.drawBox(widget, 0, 0, left, 70 + 36, time.paint)
-  util.drawBox(widget, 0, 114, left, 43, switch.paint)
-  util.drawBox(widget, 0, 166, left, var.modelBitmapHeight + 16, bitmap.paint)
+  widget.libs.util.drawBox(widget, 0, 0, left, 70 + 36, time.paint)
+  widget.libs.util.drawBox(widget, 0, 114, left, 43, switch.paint)
+  widget.libs.util.drawBox(widget, 0, 166, left, widget.libs.var.modelBitmapHeight + 16, bitmap.paint)
 
   -- line 1
-  util.drawBox(widget, left + 8, 0, half, 106, ext.paint)
-  util.drawBox(widget, left + 8 + half + 8, 0, half, 106, rx.paint)
+  widget.libs.util.drawBox(widget, left + 8, 0, half, 106, ext.paint)
+  widget.libs.util.drawBox(widget, left + 8 + half + 8, 0, half, 106, rx.paint)
 
   -- line 2
-  util.drawBox(widget, left + 8, 114, half, 78, ext.paintCell)
-  util.drawBox(widget, left + 8 + half + 8, 114, half, 78, counts.paint)
+  widget.libs.util.drawBox(widget, left + 8, 114, half, 78, ext.paintCell)
+  widget.libs.util.drawBox(widget, left + 8 + half + 8, 114, half, 78, widget.libs.counts.paint)
 
   -- line 3
-  util.drawBox(widget, left + 8, 200, half, 78, trim.paint)
-  util.drawBox(widget, left + 8 + half + 8, 200, half, 78, channel.paint)
+  widget.libs.util.drawBox(widget, left + 8, 200, half, 78, trim.paint)
+  widget.libs.util.drawBox(widget, left + 8 + half + 8, 200, half, 78, channel.paint)
 
   -- line 4
-  util.drawBox(widget, left + 8, 286, half * 2 + 8, 30, copyright.paint)
+  widget.libs.util.drawBox(widget, left + 8, 286, half * 2 + 8, 30, copyright.paint)
   message.paint(widget, 400, 200)
   lcd.setClipping(400, 200, 120, 20)
 end

@@ -23,7 +23,10 @@ function module.save()
   local saved = 0
   while csv do
     local line = csv:read('*line')
-    if line == nil then break end
+    if line == nil then
+      csv:close()
+      break
+    end
     if count ~= 1 then
       local name, flyTimes, lastFlyTime = line:match('([^,]+),([^,]+)')
       if name == modelName then
@@ -35,7 +38,7 @@ function module.save()
     end
     count = count + 1
   end
-  if csv then csv:close() end
+
   -- if no data in csv
   if saved == 0 then
     data = string.format('%s%s,%d,%s\n', data, modelName, _current, getTime())
@@ -51,16 +54,18 @@ function module.init()
   local csv = io.open(fileName, 'r')
   while csv do
     local line = csv:read('*line')
-    if line == nil then break end
+    if line == nil then
+      csv:close()
+      break
+    end
     local name, flyTimes = line:match("([^,]+),([^,]+)")
     print(line)
     if name == modelName then
       _current = flyTimes
+      csv:close()
       break
     end
   end
-
-  if csv then csv:close() end
 end
 
 function module.add()

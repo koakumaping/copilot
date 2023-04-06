@@ -15,7 +15,7 @@ local MIN = -1024
 
 local switchTable = { MIN, MIN, MIN, MIN, MIN, MIN, MIN, MIN, MIN, MIN }
 local switchNameTable = { 'SA', 'SB', 'SC', 'SD', 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
-local switchTwoStageNameTable = { 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
+local switchTwoStageNameTable = { 'SC', 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
 
 local staticTime <const> = -1
 local rangeSeconds <const> = 90

@@ -8,7 +8,15 @@ local moduleHeight = 30
 local mask = lcd.loadMask('./bitmaps/copyright.png')
 local version = '0.0.0'
 
+local luaRamAvailable = 0
+
 function module.wakeup(widget)
+  local _luaRamAvailable = system.getMemoryUsage().luaRamAvailable / 1000
+  if _luaRamAvailable ~= luaRamAvailable then
+    luaRamAvailable = _luaRamAvailable
+    lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
+  end
+
   local _version = system.getVersion().version
   if _version ~= version then
     version = _version
@@ -26,6 +34,7 @@ function module.paint(widget, x, y)
   lcd.color(widget.libs.var.textColor)
   lcd.drawMask(xStart, yStart, mask, 480, 30)
   lcd.drawText(xStart + 58, yStart + 8, version)
+  lcd.drawText(xStart + 108, yStart + 8, luaRamAvailable)
 end
 
 return module

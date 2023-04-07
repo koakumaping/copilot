@@ -18,6 +18,8 @@ local message = loadLib('message')
 
 local initPending = false
 
+-- local testTabele = {}
+
 local function create()
   if not initPending then
     initPending = true
@@ -72,6 +74,13 @@ end
 
 local function wakeup(widget)
   -- print(system.getMemoryUsage().mainStackAvailable)
+  -- table.insert(testTabele, {
+  --   speed=200,
+  --   rssi=50,
+  --   RxBatt=22.5,
+  --   thr=1024,
+  -- })
+
   local w, h = lcd.getWindowSize()
   if w ~= widget.w then
     widget.w = w

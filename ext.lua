@@ -53,11 +53,11 @@ function module.paint(widget, x, y)
 
   lcd.color(widget.libs.var.textColor)
   lcd.font(FONT_L_BOLD)
-  lcd.drawText(xStart + 40 + 15, yStart + 66, string.format('%04.2f%s%04.2f%s', extCellMin == MAX and 0 or extCellMin, ' .. ' , extCellMax, ' v'))
+  lcd.drawText(xStart + 40 + 15, yStart + 62, string.format('%04.2f%s%04.2f%s', extCellMin == MAX and 0 or extCellMin, ' .. ' , extCellMax, ' v'))
 end
 
 function module.paintCell(widget, xStart, yStart)
-  widget.libs.util.drawChar(widget, xStart + 15, yStart, string.format('%04.2f%s', extCell, 'V'))
+  widget.libs.util.drawChar(widget, xStart + 15, yStart - 4, string.format('%04.2f%s', extCell, 'V'))
 end
 
 return module

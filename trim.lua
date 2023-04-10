@@ -60,7 +60,7 @@ function module.paint(widget, x, y)
   local fix = 6
 
   local xStart = x + 23
-  local yStart = y
+  local yStart = y - 4
 
   if moduleX ~= xStart then moduleX = xStart end
   if moduleY ~= yStart then moduleY = yStart end

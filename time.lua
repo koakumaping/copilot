@@ -60,7 +60,7 @@ function module.paint(widget, x, y)
   widget.libs.util.drawChar(widget, xStart, yStart, string.format('%s:%s', flyTimeMinutes, flyTimeSeconds))
   lcd.color(widget.libs.var.textColor)
   lcd.font(FONT_L_BOLD)
-  lcd.drawText(x + 86, yStart + 65, string.format('%s:%s .. %s:%s', lastFlyTimeMinutes, lastFlyTimeSeconds, allTimeHour, allTimeMinutes))
+  lcd.drawText(x + 86, yStart + 62, string.format('%s:%s .. %s:%s', lastFlyTimeMinutes, lastFlyTimeSeconds, allTimeHour, allTimeMinutes))
 
   -- lcd.color(widget.libs.var.themeColor)
   -- lcd.drawFilledRectangle(xStart + 2 + 4, yStart + 69 + 2, 200, 16)

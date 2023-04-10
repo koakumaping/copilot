@@ -71,7 +71,7 @@ function module.drawBox(widget, x, y, w, h, f)
   lcd.drawMask(x, y + h - 6, bottomLeftMask)
   lcd.drawMask(x + w - 6, y + h - 6, bottomRightMask)
 
-  if f then f(widget, x + 8, y + 8) end
+  if f then f(widget, x + 8, y + 12) end
 end
 
 function module.convertTrim(value)

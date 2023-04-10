@@ -40,7 +40,7 @@ function module.paint(widget, x, y)
 
   lcd.color(textColor)
   lcd.font(FONT_L_BOLD)
-  lcd.drawText(xStart + 40, yStart + 66, string.format('%04.2f%s%04.2f%s', rxBattMin == widget.libs.var.MAX and 0 or rxBattMin, ' .. ' , rxBattMax, ' v'))
+  lcd.drawText(xStart + 40, yStart + 62, string.format('%04.2f%s%04.2f%s', rxBattMin == widget.libs.var.MAX and 0 or rxBattMin, ' .. ' , rxBattMax, ' v'))
 end
 
 return module

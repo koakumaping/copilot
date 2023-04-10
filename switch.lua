@@ -158,7 +158,7 @@ end
 function module.paint(widget, x, y)
   -- print(countStartTime, countEndTime)
   local xStart = x + 4
-  local yStart = y
+  local yStart = y - 4
 
   if moduleX ~= xStart then moduleX = xStart end
   if moduleY ~= yStart then moduleY = yStart end

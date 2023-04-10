@@ -5,9 +5,9 @@ local modelMask = lcd.loadMask('./bitmaps/model-mask.png')
 
 function module.paint(widget, x, y)
   if widget.bitmap ~= nil then
-    lcd.drawBitmap(x, y, widget.bitmap, widget.libs.var.modelBitmapWidth, widget.libs.var.modelBitmapHeight)
+    lcd.drawBitmap(x, y - 4, widget.bitmap, widget.libs.var.modelBitmapWidth, widget.libs.var.modelBitmapHeight)
     lcd.color(lcd.RGB(225, 225, 225))
-    lcd.drawMask(x, y, modelMask)
+    lcd.drawMask(x, y - 4, modelMask)
   end
 end
 

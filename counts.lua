@@ -80,10 +80,10 @@ function module.saveRecord()
     end
     count = count + 1
   end
-  print(modelName, startDate, stopDate, lastFlyTime)
+  -- print(modelName, startDate, stopDate, lastFlyTime)
   data = string.format('%s%s,%s,%s,%d\n', data, modelName, startDate, stopDate, lastFlyTime)
 
-  print(data)
+  -- print(data)
   -- save to file
   local filewrite = io.open(recordFileName, 'w')
   filewrite:write(data)
@@ -91,7 +91,7 @@ function module.saveRecord()
 end
 
 function module.init()
-  print('init', model.name(), modelName)
+  -- print('init', model.name(), modelName)
   local csv = io.open(fileName, 'r')
   -- creat if not exist
   if csv == nil then
@@ -108,7 +108,7 @@ function module.init()
       break
     end
     local name, flyTimes = line:match("([^,]+),([^,]+)")
-    print(line)
+    -- print(line)
     if name == modelName then
       _current = flyTimes
       csv:close()
@@ -121,7 +121,7 @@ function module.add(widget)
   lastFlyTime = widget.lastFlyTime
   _current = _current + 1
   module:save()
-  print(modelName, startDate, stopDate, widget.lastFlyTime)
+  -- print(modelName, startDate, stopDate, widget.lastFlyTime)
   module:saveRecord()
 end
 

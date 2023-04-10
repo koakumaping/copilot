@@ -8,8 +8,14 @@ local moduleHeight = 60
 local current = 0
 local _current = 0
 
+local startDate = ''
+local stopDate = ''
+
 local modelName = model.name()
 local fileName = 'data/fly.csv'
+local recordFileName = string.format('%s%s%s', 'data/', os.date("%Y-%m-%d", os.time()), '.csv')
+
+local lastFlyTime = 0
 
 function getTime()
   return os.date("%Y-%m-%d %H:%M:%S", os.time())
@@ -28,7 +34,7 @@ function module.save()
       break
     end
     if count ~= 1 then
-      local name, flyTimes, lastFlyTime = line:match('([^,]+),([^,]+)')
+      local name, flyTimes, lastFlyTime = line:match('([^,]+),([^,]+),([^,]+)')
       if name == modelName then
         flyTimes = _current
         lastFlyTime = getTime()
@@ -46,6 +52,40 @@ function module.save()
 
   -- save to file
   local filewrite = io.open(fileName, 'w')
+  filewrite:write(data)
+  filewrite:close()
+end
+
+function module.saveRecord()
+  local data = 'ModelName,StartDate,StopTime,FlyTime\n'
+  local csv = io.open(recordFileName, 'r')
+  -- creat if not exist
+  if csv == nil then
+    filewrite = io.open(recordFileName, 'w')
+    filewrite:write(data)
+    filewrite:close()
+    csv = io.open(recordFileName, 'r')
+  end
+
+  local count = 1
+  local saved = 0
+  while csv do
+    local line = csv:read('*line')
+    if line == nil then
+      csv:close()
+      break
+    end
+    if count ~= 1 then
+      data = string.format('%s%s\n', data, line)
+    end
+    count = count + 1
+  end
+  print(modelName, startDate, stopDate, lastFlyTime)
+  data = string.format('%s%s,%s,%s,%d\n', data, modelName, startDate, stopDate, lastFlyTime)
+
+  print(data)
+  -- save to file
+  local filewrite = io.open(recordFileName, 'w')
   filewrite:write(data)
   filewrite:close()
 end
@@ -77,9 +117,20 @@ function module.init()
   end
 end
 
-function module.add()
+function module.add(widget)
+  lastFlyTime = widget.lastFlyTime
   _current = _current + 1
   module:save()
+  print(modelName, startDate, stopDate, widget.lastFlyTime)
+  module:saveRecord()
+end
+
+function module.start()
+  startDate = getTime()
+end
+
+function module.stop()
+  stopDate = getTime()
 end
 
 function module.wakeup(widget)

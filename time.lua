@@ -8,7 +8,6 @@ local moduleWidth = 48 * 4 + 22
 local moduleHeight = 90
 
 local flyTime = 0
-local lastFlyTime = 0
 local allTime = 0
 
 function module.wakeup(widget)
@@ -20,7 +19,7 @@ function module.wakeup(widget)
   if _flyTime ~= flyTime then
     flyTime = _flyTime
     if _resetCondition < 0 then
-      lastFlyTime = _direction < 0 and model.getTimer(0):start() - _flyTime or _flyTime
+      widget.lastFlyTime = _direction < 0 and model.getTimer(0):start() - _flyTime or _flyTime
     end
     lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
   end
@@ -41,8 +40,8 @@ function module.paint(widget, x, y)
   local flyTimeSeconds = string.format('%02d', flyTime % 60)
   local flyTimeMinutes = flyTime - flyTimeSeconds >= 0 and string.format('%02d', (flyTime - flyTimeSeconds) / 60) or string.format('%01d', (flyTime - flyTimeSeconds) / 60)
 
-  local lastFlyTimeSeconds = string.format('%02d', lastFlyTime % 60)
-  local lastFlyTimeMinutes = string.format('%02d', (lastFlyTime - lastFlyTimeSeconds) / 60) 
+  local lastFlyTimeSeconds = string.format('%02d', widget.lastFlyTime % 60)
+  local lastFlyTimeMinutes = string.format('%02d', (widget.lastFlyTime - lastFlyTimeSeconds) / 60) 
 
   local allTimeHour = string.format('%02d', math.floor(allTime / 3600))
   local allTimeMinutes = string.format('%02d', math.floor((allTime - allTimeHour * 3600) / 60))

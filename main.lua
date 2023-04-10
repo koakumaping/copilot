@@ -39,6 +39,7 @@ local function create()
     message = '',
     messageStartTime = 0,
     messageEndTime = 0,
+    lastFlyTime = 0,
   }
 end
 

@@ -18,12 +18,18 @@ local switchNameTable = { 'SA', 'SB', 'SC', 'SD', 'SE', 'SF', 'SG', 'SH', 'SI', 
 local switchTwoStageNameTable = { 'SC', 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
 
 local staticTime <const> = -1
-local rangeSeconds <const> = 90
+local rangeSeconds <const> = 2
 
 local countStartTime = staticTime
 local countStartTimeRecording = false
 local countEndTime = staticTime
 local countEndTimeRecording = false
+
+function getTime()
+  return os.date("%Y-%m-%d %H:%M:%S", os.time())
+end
+
+local startDate = ''
 
 function indexOf(array, value)
   for i, v in ipairs(array) do
@@ -108,6 +114,8 @@ function module.wakeup(widget)
         countStartTime = os.clock()
         countStartTimeRecording = true
         countEndTime = staticTime
+
+        widget.libs.counts.start(widget)
         widget.libs.message.push('START')
       end
     end
@@ -116,6 +124,8 @@ function module.wakeup(widget)
       countEndTime = os.clock()
       countStartTimeRecording = false
       countEndTimeRecording = true
+
+      widget.libs.counts.stop(widget)
       widget.libs.message.push('STOP')
     end
     lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)
@@ -143,7 +153,7 @@ function module.wakeup(widget)
       if countEndTime - countStartTime > rangeSeconds then
         -- countStartTime = staticTime
         countEndTime = staticTime
-        widget.libs.counts.add()
+        widget.libs.counts.add(widget)
       end
     end
     lcd.invalidate(moduleX, moduleY, moduleWidth, moduleHeight)

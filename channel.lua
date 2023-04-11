@@ -51,6 +51,7 @@ function drawChannel(widget, index, value)
 
   lcd.color(widget.libs.var.textColor)
   lcd.drawMask(moduleX + padding * _index, moduleY, channelMask)
+  lcd.drawText(moduleX + padding * _index + 5, moduleY + halfInnerHeight - 6, index)
 end
 
 function module.wakeup(widget)

@@ -13,7 +13,7 @@ local stopDate = ''
 
 local modelName = model.name()
 local fileName = 'data/fly.csv'
-local recordFileName = string.format('%s%s%s', 'data/', os.date("%Y-%m-%d", os.time()), '.csv')
+local recordFileName = string.format('%s%s%s', 'data/', model.name(), '.csv')
 
 local lastFlyTime = 0
 
@@ -57,7 +57,7 @@ function module.save()
 end
 
 function module.saveRecord()
-  local data = 'ModelName,StartDate,StopTime,FlyTime\n'
+  local data = 'FlyTime,LandingVoltage,StartDate,StopTime\n'
   local csv = io.open(recordFileName, 'r')
   -- creat if not exist
   if csv == nil then
@@ -81,9 +81,25 @@ function module.saveRecord()
     count = count + 1
   end
   -- print(modelName, startDate, stopDate, lastFlyTime)
-  data = string.format('%s%s,%s,%s,%d\n', data, modelName, startDate, stopDate, lastFlyTime)
 
-  -- print(data)
+  local ext = 0
+  local source = system.getSource({ name='ADC2' })
+  if source ~= nil then
+    ext = source:value()
+  end
+
+  local lastFlyTimeSeconds = string.format('%02d', lastFlyTime % 60)
+  local lastFlyTimeMinutes = string.format('%02d', (lastFlyTime - lastFlyTimeSeconds) / 60) 
+
+  data = string.format('%s%s,%s,%s,%s\n',
+    data,
+    string.format('%s:%s', lastFlyTimeMinutes, lastFlyTimeSeconds),
+    string.format('%d%s(%03.2f%s)', ext, 'v', ext / 6, 'v'),
+    startDate,
+    stopDate
+  )
+
+  print(data)
   -- save to file
   local filewrite = io.open(recordFileName, 'w')
   filewrite:write(data)

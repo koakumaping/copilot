@@ -18,7 +18,7 @@ local switchNameTable = { 'SA', 'SB', 'SC', 'SD', 'SE', 'SF', 'SG', 'SH', 'SI', 
 local switchTwoStageNameTable = { 'SC', 'SE', 'SF', 'SG', 'SH', 'SI', 'SJ' }
 
 local staticTime <const> = -1
-local rangeSeconds <const> = 60
+local rangeSeconds <const> = 2
 
 local countStartTime = staticTime
 local countStartTimeRecording = false
